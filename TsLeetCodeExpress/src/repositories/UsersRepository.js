@@ -19,6 +19,7 @@ exports.UsersRepository = void 0;
 const index_1 = require("../db/index");
 const User_1 = require("../db/User");
 const UserMapper_1 = require("./mappers/UserMapper");
+const CustomError_1 = require("../repoAndBLL/CustomError");
 class UsersRepository {
     constructor() {
         _UsersRepository__repository.set(this, index_1.AppDataSource.getRepository(User_1.User));
@@ -56,29 +57,48 @@ class UsersRepository {
             return repoUser;
         });
     }
-    createUserAsync(user) {
+    createUserAsync(createUserDTO) {
         return __awaiter(this, void 0, void 0, function* () {
             const newUser = __classPrivateFieldGet(this, _UsersRepository__repository, "f").create({
-                login: user.login,
-                email: user.email,
-                createdAt: new Date(),
+                login: createUserDTO.login,
+                email: createUserDTO.email,
+                passwordHash: createUserDTO.passwordHash,
                 isActive: true,
-                passwordHash: user.passwordHash
+                createdAt: new Date()
             });
             __classPrivateFieldGet(this, _UsersRepository__repository, "f").save(newUser);
             return newUser.id; // todo: ���������, ������� �� id.
         });
     }
-    updateUserAsync(user) {
+    updateUserAsync(updateUserDTO) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield __classPrivateFieldGet(this, _UsersRepository__repository, "f").save(user);
-            return user;
+            const userDb = yield __classPrivateFieldGet(this, _UsersRepository__repository, "f").findOneBy({
+                id: updateUserDTO.id
+            });
+            if (userDb == null)
+                throw new CustomError_1.CustomError("Not found", `User not found in db by id: ${updateUserDTO.id}`, 404, null);
+            userDb.email = updateUserDTO.newEmail;
+            userDb.passwordHash = updateUserDTO.newPasswordHash;
+            const savedUserDB = yield __classPrivateFieldGet(this, _UsersRepository__repository, "f").save(userDb);
+            return UserMapper_1.UserMapper.toRepoLayer(savedUserDB);
         });
     }
-    deleteUserAsync(user) {
+    deleteUserAsync(deleteUserDTO) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield __classPrivateFieldGet(this, _UsersRepository__repository, "f").delete(user);
-            return user;
+            yield __classPrivateFieldGet(this, _UsersRepository__repository, "f").delete({ id: deleteUserDTO.id });
+            return deleteUserDTO.id;
+        });
+    }
+    changeIsActiveUserAsync(changeIsActiveUserDTO) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const userDb = yield __classPrivateFieldGet(this, _UsersRepository__repository, "f").findOneBy({
+                id: changeIsActiveUserDTO.id
+            });
+            if (userDb == null)
+                throw new CustomError_1.CustomError("Not found", `User not found in db by id: ${changeIsActiveUserDTO.id}`, 404, null);
+            userDb.isActive = changeIsActiveUserDTO.isActive;
+            const savedUserDB = yield __classPrivateFieldGet(this, _UsersRepository__repository, "f").save(userDb);
+            return savedUserDB.id;
         });
     }
 }

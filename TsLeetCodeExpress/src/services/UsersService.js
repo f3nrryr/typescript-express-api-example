@@ -12,6 +12,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UsersService = void 0;
 const UserMapper_1 = require("./mappers/UserMapper");
 const CustomError_1 = require("../repoAndBLL/CustomError");
+const CreateUserDTO_1 = require("../repositories/dto/in/user/CreateUserDTO");
+const UpdateUserDTO_1 = require("../repositories/dto/in/user/UpdateUserDTO");
+const DeleteUserDTO_1 = require("../repositories/dto/in/user/DeleteUserDTO");
+const ChangeIsActiveUserDTO_1 = require("../repositories/dto/in/user/ChangeIsActiveUserDTO");
 class UsersService {
     constructor(_usersRepository) {
         this._usersRepository = _usersRepository;
@@ -45,22 +49,29 @@ class UsersService {
     }
     createUserAsync(user) {
         return __awaiter(this, void 0, void 0, function* () {
-            const repoUser = UserMapper_1.UserMapper.toRepo(user);
-            return yield this._usersRepository.createUserAsync(repoUser);
+            const createUserRepo = new CreateUserDTO_1.CreateUserDTO(user.login, user.email, user.passwordHash);
+            return yield this._usersRepository.createUserAsync(createUserRepo);
         });
     }
     updateUserAsync(user) {
         return __awaiter(this, void 0, void 0, function* () {
-            const repoUser = UserMapper_1.UserMapper.toRepo(user);
-            yield this._usersRepository.updateUserAsync(repoUser);
-            return user;
+            const updateUserRepo = new UpdateUserDTO_1.UpdateUserDTO(user.id, user.newEmail, user.newPasswordHash);
+            const updatedUserRepo = yield this._usersRepository.updateUserAsync(updateUserRepo);
+            return UserMapper_1.UserMapper.toBLL(updatedUserRepo);
         });
     }
     deleteUserAsync(user) {
         return __awaiter(this, void 0, void 0, function* () {
-            const repoUser = UserMapper_1.UserMapper.toRepo(user);
-            yield this._usersRepository.deleteUserAsync(repoUser);
-            return user;
+            const deleteUserRepo = new DeleteUserDTO_1.DeleteUserDTO(user.id);
+            yield this._usersRepository.deleteUserAsync(deleteUserRepo);
+            return user.id;
+        });
+    }
+    changeIsActiveUserAsync(changeIsActiveUserRequest) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const changeIsActiveUserRepo = new ChangeIsActiveUserDTO_1.ChangeIsActiveUserDTO(changeIsActiveUserRequest.id, changeIsActiveUserRequest.isActive);
+            yield this._usersRepository.changeIsActiveUserAsync(changeIsActiveUserRepo);
+            return changeIsActiveUserRequest.id;
         });
     }
 }

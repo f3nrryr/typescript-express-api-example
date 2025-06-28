@@ -11,6 +11,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TasksService = void 0;
 const CustomError_1 = require("../repoAndBLL/CustomError");
+const ChangeTaskVisibilityDTO_1 = require("../repositories/dto/in/task/ChangeTaskVisibilityDTO");
+const CreateTaskDTO_1 = require("../repositories/dto/in/task/CreateTaskDTO");
+const DeleteTaskDTO_1 = require("../repositories/dto/in/task/DeleteTaskDTO");
+const UpdateTaskDTO_1 = require("../repositories/dto/in/task/UpdateTaskDTO");
 const TaskMapper_1 = require("./mappers/TaskMapper");
 class TasksService {
     constructor(_tasksRepository) {
@@ -36,22 +40,29 @@ class TasksService {
     }
     createTaskAsync(task) {
         return __awaiter(this, void 0, void 0, function* () {
-            const repoTask = TaskMapper_1.TaskMapper.toRepo(task);
-            return yield this._tasksRepository.createTaskAsync(repoTask);
+            const createTaskRepo = new CreateTaskDTO_1.CreateTaskDTO(task.title, task.description, task.taskComplexityId, task.isVisible);
+            return yield this._tasksRepository.createTaskAsync(createTaskRepo);
         });
     }
     updateTaskAsync(task) {
         return __awaiter(this, void 0, void 0, function* () {
-            const repoTask = TaskMapper_1.TaskMapper.toRepo(task);
-            yield this._tasksRepository.updateTaskAsync(repoTask);
-            return task;
+            const updateTaskRepo = new UpdateTaskDTO_1.UpdateTaskDTO(task.id, task.title, task.description, task.taskComplexityId, task.isVisible);
+            const updatedTaskRepo = yield this._tasksRepository.updateTaskAsync(updateTaskRepo);
+            return TaskMapper_1.TaskMapper.toBLL(updatedTaskRepo);
         });
     }
     deleteTaskAsync(task) {
         return __awaiter(this, void 0, void 0, function* () {
-            const repoTask = TaskMapper_1.TaskMapper.toRepo(task);
-            yield this._tasksRepository.deleteTaskAsync(repoTask);
-            return task;
+            const deleteTaskRepo = new DeleteTaskDTO_1.DeleteTaskDTO(task.id);
+            yield this._tasksRepository.deleteTaskAsync(deleteTaskRepo);
+            return task.id;
+        });
+    }
+    changeTaskVisibilityAsync(task) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const changeTaskVisibilityRepo = new ChangeTaskVisibilityDTO_1.ChangeTaskVisibilityDTO(task.id, task.isVisible);
+            yield this._tasksRepository.changeTaskVisibilityAsync(changeTaskVisibilityRepo);
+            return task.id;
         });
     }
 }

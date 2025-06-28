@@ -1,6 +1,6 @@
 import { TaskMapper } from "./TaskMapper";
-import { User as BllUser } from "../../services/dto/User";
-import { User as ApiUser } from "../contractsDTOs/User";
+import { User as BllUser } from "../../services/dto/response/User";
+import { User as ApiUser } from "../contractsDTOs/res/User";
 
 export class UserMapper {
 

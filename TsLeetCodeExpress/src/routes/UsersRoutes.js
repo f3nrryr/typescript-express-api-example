@@ -35,8 +35,11 @@ _UsersRoutes_instances = new WeakSet(), _UsersRoutes__initRoutes = function _Use
     this.router.get(':/login', (req, res, next) => __awaiter(this, void 0, void 0, function* () {
         yield this._usersController.getUserByLogin(req, res, next);
     }));
-    this.router.post('/', (req, res, next) => __awaiter(this, void 0, void 0, function* () {
+    this.router.post('/create', (req, res, next) => __awaiter(this, void 0, void 0, function* () {
         yield this._usersController.createUser(req, res, next);
+    }));
+    this.router.post('/isActive', (req, res, next) => __awaiter(this, void 0, void 0, function* () {
+        yield this._usersController.changeIsActiveUser(req, res, next);
     }));
     this.router.put('/', (req, res, next) => __awaiter(this, void 0, void 0, function* () {
         yield this._usersController.updateUser(req, res, next);
@@ -45,7 +48,7 @@ _UsersRoutes_instances = new WeakSet(), _UsersRoutes__initRoutes = function _Use
         yield this._usersController.deleteUser(req, res, next);
     }));
 };
-// ��������� ������� ��� �������� �������
+// ��������� ������� ��� �������� �������:
 const createUsersRouter = (usersController) => {
     return new UsersRoutes(usersController).router;
 };

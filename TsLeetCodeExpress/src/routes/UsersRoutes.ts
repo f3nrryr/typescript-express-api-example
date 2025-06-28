@@ -23,8 +23,12 @@ class UsersRoutes {
             await this._usersController.getUserByLogin(req, res, next);
         });
 
-        this.router.post('/', async (req, res, next) => {
+        this.router.post('/create', async (req, res, next) => {
             await this._usersController.createUser(req, res, next);
+        });
+
+        this.router.post('/isActive', async (req, res, next) => {
+            await this._usersController.changeIsActiveUser(req, res, next);
         });
 
         this.router.put('/', async (req, res, next) => {
@@ -38,7 +42,7 @@ class UsersRoutes {
     }
 }
 
-// Фабричная функция для создания роутера
+// Фабричная функция для создания роутера:
 export const createUsersRouter = (usersController: UsersController) => {
     return new UsersRoutes(usersController).router;
 };

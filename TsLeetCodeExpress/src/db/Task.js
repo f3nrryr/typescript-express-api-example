@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Task = void 0;
 const typeorm_1 = require("typeorm");
 const User_1 = require("./User");
+const TaskComplexity_1 = require("./TaskComplexity");
 let Task = class Task {
 };
 exports.Task = Task;
@@ -29,6 +30,11 @@ __decorate([
     (0, typeorm_1.Column)("text"),
     __metadata("design:type", String)
 ], Task.prototype, "description", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    (0, typeorm_1.ForeignKey)(() => TaskComplexity_1.TaskComplexity, "id"),
+    __metadata("design:type", Number)
+], Task.prototype, "taskComplexityId", void 0);
 __decorate([
     (0, typeorm_1.Column)("timestamp without time zone"),
     __metadata("design:type", Date)

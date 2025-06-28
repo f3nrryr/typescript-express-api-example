@@ -19,6 +19,7 @@ exports.TasksRepository = void 0;
 const index_1 = require("../db/index");
 const Task_1 = require("../db/Task");
 const TaskMapper_1 = require("./mappers/TaskMapper");
+const CustomError_1 = require("../repoAndBLL/CustomError");
 class TasksRepository {
     constructor() {
         _TasksRepository__repository.set(this, index_1.AppDataSource.getRepository(Task_1.Task));
@@ -45,36 +46,50 @@ class TasksRepository {
             return repoTask;
         });
     }
-    createTaskAsync(task) {
+    createTaskAsync(createTaskDTO) {
         return __awaiter(this, void 0, void 0, function* () {
             const newTask = __classPrivateFieldGet(this, _TasksRepository__repository, "f").create({
-                title: task.title,
-                description: task.description,
-                createdAt: new Date(),
-                isVisible: true
+                title: createTaskDTO.title,
+                description: createTaskDTO.description,
+                taskComplexityId: createTaskDTO.taskComplexityId,
+                isVisible: createTaskDTO.isVisible,
+                createdAt: new Date()
             });
             __classPrivateFieldGet(this, _TasksRepository__repository, "f").save(newTask);
             return newTask.id;
         });
     }
-    updateTaskAsync(task) {
+    updateTaskAsync(updateTaskDTO) {
         return __awaiter(this, void 0, void 0, function* () {
             const taskDb = yield __classPrivateFieldGet(this, _TasksRepository__repository, "f").findOneBy({
-                id: task.id
+                id: updateTaskDTO.id
             });
             if (taskDb == null)
-                throw new Error();
-            taskDb.title = task.title;
-            taskDb.description = task.description;
-            taskDb.isVisible = task.isVisible;
-            yield __classPrivateFieldGet(this, _TasksRepository__repository, "f").save(taskDb);
-            return task;
+                throw new CustomError_1.CustomError("Not found", `Task not found in db by id: ${updateTaskDTO.id}`, 404, null);
+            taskDb.title = updateTaskDTO.title;
+            taskDb.description = updateTaskDTO.description;
+            taskDb.taskComplexityId = updateTaskDTO.taskComplexityId;
+            taskDb.isVisible = updateTaskDTO.isVisible;
+            const savedTaskDb = yield __classPrivateFieldGet(this, _TasksRepository__repository, "f").save(taskDb);
+            return TaskMapper_1.TaskMapper.toRepoLayer(savedTaskDb);
         });
     }
-    deleteTaskAsync(task) {
+    deleteTaskAsync(deleteTaskDTO) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield __classPrivateFieldGet(this, _TasksRepository__repository, "f").delete({ id: task.id });
-            return task;
+            yield __classPrivateFieldGet(this, _TasksRepository__repository, "f").delete({ id: deleteTaskDTO.id });
+            return deleteTaskDTO.id;
+        });
+    }
+    changeTaskVisibilityAsync(changeTaskVisibilityDTO) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const taskDb = yield __classPrivateFieldGet(this, _TasksRepository__repository, "f").findOneBy({
+                id: changeTaskVisibilityDTO.id
+            });
+            if (taskDb == null)
+                throw new CustomError_1.CustomError("Not found", `Task not found in db by id: ${changeTaskVisibilityDTO.id}`, 404, null);
+            taskDb.isVisible = changeTaskVisibilityDTO.isVisible;
+            const savedTaskDb = yield __classPrivateFieldGet(this, _TasksRepository__repository, "f").save(taskDb);
+            return savedTaskDb.id;
         });
     }
 }

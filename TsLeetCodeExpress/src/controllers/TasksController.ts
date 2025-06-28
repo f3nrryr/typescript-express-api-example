@@ -1,7 +1,16 @@
 import { Request, Response, NextFunction } from 'express';
 import { ITasksService } from "../services/interfaces/ITasksService";
-import { Task } from "./contractsDTOs/Task";
 import { TaskMapper } from "./mappers/TaskMapper";
+
+import { CreateTaskRequest as ApiCreateRequest } from '../services/dto/request/task/CreateTaskRequest';
+import { CreateTaskRequest as BllCreateRequest } from "../services/dto/request/task/CreateTaskRequest";
+import { UpdateTaskRequest as ApiUpdateRequest } from './contractsDTOs/req/task/UpdateTaskRequest';
+import { UpdateTaskRequest as BllUpdateRequest } from "../services/dto/request/task/UpdateTaskRequest";
+import { DeleteTaskRequest as ApiDeleteRequest } from './contractsDTOs/req/task/DeleteTaskRequest';
+import { DeleteTaskRequest as BllDeleteRequest } from "../services/dto/request/task/DeleteTaskRequest";
+
+import { ChangeTaskVisibilityRequest as ApiChangeIsVisRequest } from './contractsDTOs/req/task/ChangeTaskVisibilityRequest';
+import { ChangeTaskVisibilityRequest as BllChangeIsVisRequest } from "../services/dto/request/task/ChangeTaskVisibilityRequest";
 
 export class TasksController {
 
@@ -27,28 +36,46 @@ export class TasksController {
 
     async createTask(req: Request, res: Response, next: NextFunction) {
 
-        const bllTask = TaskMapper.toBLL(req.body);
+        const apiReq: ApiCreateRequest = req.body
 
-        const createdTaskId = await this._tasksService.createTaskAsync(bllTask);
+        const bllReq = new BllCreateRequest(apiReq.title, apiReq.description, apiReq.taskComplexityId, apiReq.isVisible);
+
+        const createdTaskId = await this._tasksService.createTaskAsync(bllReq);
 
         return res.json(createdTaskId);
     }
 
     async updateTask(req: Request, res: Response, next: NextFunction) {
 
-        const bllTask = TaskMapper.toBLL(req.body);
+        const apiReq: ApiUpdateRequest = req.body
 
-        await this._tasksService.updateTaskAsync(bllTask);
+        const bllReq = new BllUpdateRequest(apiReq.id, apiReq.title, apiReq.description, apiReq.taskComplexityId, apiReq.isVisible);
 
-        return res.json(req.body);
+        const bllRes = await this._tasksService.updateTaskAsync(bllReq);
+
+        return res.json(TaskMapper.toApi(bllRes));
     }
 
-    async deleteUser(req: Request, res: Response, next: NextFunction) {
+    async deleteTask(req: Request, res: Response, next: NextFunction) {
 
-        const bllTask = TaskMapper.toBLL(req.body);
+        const apiReq: ApiDeleteRequest = req.body
 
-        await this._tasksService.deleteTaskAsync(bllTask);
+        const bllReq = new BllDeleteRequest(apiReq.id);
 
-        return res.json(req.body);
+        await this._tasksService.deleteTaskAsync(bllReq);
+
+        return res.json(bllReq.id);
+    }
+
+    async changeTaskVisibility(req: Request, res: Response, next: NextFunction) {
+
+        const apiReq: ApiChangeIsVisRequest = req.body
+
+        const bllReq = new BllChangeIsVisRequest(apiReq.id, apiReq.isVisible);
+
+        await this._tasksService.changeTaskVisibilityAsync(bllReq);
+
+        return res.json(bllReq.id);
+
     }
 }

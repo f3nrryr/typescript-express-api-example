@@ -11,6 +11,7 @@ import { TasksService } from "./src/services/TasksService";
 import express, { Express } from 'express';
 import { createUsersRouter } from "./src/routes/UsersRoutes";
 import { UsersController } from "./src/controllers/UsersController";
+import bodyParser from "body-parser";
 
 const diContainer = new DIContainer();
 
@@ -21,9 +22,15 @@ diContainer.registerTransient<ITasksService, TasksService>();
 
 const usersController = new UsersController(diContainer.get<IUsersService>());
 
-//TODO: START APP + log decorator (req + res) + err-handler middleware + swagger + comments (api) + tests. cfg через конф. файл или .env.
+//TODO: log decorator (req + res) + err-handler middleware + comments (api) + tests. cfg через конф. файл или .env.
 
 const app = express();
 
+app.use(bodyParser.json());
+
 app.use('/api/users', createUsersRouter(usersController));
-app.use('/api/tasks',);
+//app.use('/api/tasks',);
+
+const PORT = 8082;
+
+app.listen(PORT, () => console.log(`Application started on ${PORT}`));

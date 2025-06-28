@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TaskMapper = void 0;
-const Task_1 = require("../dto/Task");
+const Task_1 = require("../dto/out/Task");
 const UserMapper_1 = require("./UserMapper");
 class TaskMapper {
     static toRepoLayer(task) {

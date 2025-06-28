@@ -2,7 +2,7 @@ import { Task } from "./Task";
 
 export class User {
 
-    id: number | null;
+    id: number;
     login: string;
     email: string;
     passwordHash: string;
@@ -11,13 +11,13 @@ export class User {
     solvedTasks: Task[];
 
     constructor(
-        id: number | null,
+        id: number,
         login: string,
         email: string,
         passwordHash: string,
         isActive: boolean,
         createdAt: Date,
-        solvedTasks: Task[] = []
+        solvedTasks: Task[]
     ) {
         this.id = id;
         this.login = login;

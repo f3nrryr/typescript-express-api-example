@@ -2,8 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserMapper = void 0;
 const TaskMapper_1 = require("./TaskMapper");
-const User_1 = require("../../services/dto/User");
-const User_2 = require("../contractsDTOs/User");
+const User_1 = require("../../services/dto/response/User");
+const User_2 = require("../contractsDTOs/res/User");
 class UserMapper {
     static toApi(user) {
         const userSolvedTasks = user.solvedTasks.map(TaskMapper_1.TaskMapper.toApi);

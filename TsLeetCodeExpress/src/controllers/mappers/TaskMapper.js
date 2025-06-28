@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TaskMapper = void 0;
-const Task_1 = require("../../services/dto/Task");
-const Task_2 = require("../contractsDTOs/Task");
+const Task_1 = require("../../services/dto/response/Task");
+const Task_2 = require("../contractsDTOs/res/Task");
 const UserMapper_1 = require("./UserMapper");
 class TaskMapper {
     static toApi(task) {

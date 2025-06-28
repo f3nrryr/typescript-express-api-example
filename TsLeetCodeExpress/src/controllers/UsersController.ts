@@ -1,7 +1,15 @@
 import { Request, Response, NextFunction } from 'express';
 import { IUsersService } from "../services/interfaces/IUsersService";
-import { User } from "./contractsDTOs/User";
 import { UserMapper } from "./mappers/UserMapper";
+
+import { CreateUserRequest as ApiCreateRequest } from '../services/dto/request/user/CreateUserRequest';
+import { CreateUserRequest as BllCreateRequest } from "../services/dto/request/user/CreateUserRequest";
+import { UpdateUserRequest as ApiUpdateRequest } from './contractsDTOs/req/user/UpdateUserRequest';
+import { UpdateUserRequest as BllUpdateRequest } from "../services/dto/request/user/UpdateUserRequest";
+import { DeleteUserRequest as ApiDeleteRequest } from './contractsDTOs/req/user/DeleteUserRequest';
+import { DeleteUserRequest as BllDeleteRequest } from "../services/dto/request/user/DeleteUserRequest";
+import { ChangeIsActiveUserRequest as ApiChangeIsActiveUserRequest } from './contractsDTOs/req/user/ChangeIsActiveUserRequest';
+import { ChangeIsActiveUserRequest as BllChangeIsActiveUserRequest } from "../services/dto/request/user/ChangeIsActiveUserRequest";
 
 export class UsersController {
 
@@ -36,28 +44,45 @@ export class UsersController {
 
     async createUser(req: Request, res: Response, next: NextFunction) {
 
-        const bllUser = UserMapper.toBLL(req.body);
+        const createUserApiReq: ApiCreateRequest = req.body;
 
-        const createdUserId = await this._usersService.createUserAsync(bllUser);
+        const bllCreateUserReq = new BllCreateRequest(createUserApiReq.login, createUserApiReq.email, createUserApiReq.passwordHash);
+
+        const createdUserId = await this._usersService.createUserAsync(bllCreateUserReq);
 
         return res.json(createdUserId);
     }
 
     async updateUser(req: Request, res: Response, next: NextFunction) {
 
-        const bllUser = UserMapper.toBLL(req.body);
+        const updateUserApiReq: ApiUpdateRequest = req.body;
 
-        await this._usersService.updateUserAsync(bllUser);
+        const bllUpdateUserReq = new BllUpdateRequest(updateUserApiReq.id, updateUserApiReq.newEmail, updateUserApiReq.newPasswordHash);
 
-        return res.json(req.body);
+        const updatedUserBll = await this._usersService.updateUserAsync(bllUpdateUserReq);
+
+        return res.json(UserMapper.toApi(updatedUserBll));
     }
 
     async deleteUser(req: Request, res: Response, next: NextFunction) {
 
-        const bllUser = UserMapper.toBLL(req.body);
+        const apiDeleteReq: ApiDeleteRequest = req.body;
 
-        await this._usersService.deleteUserAsync(bllUser);
+        const bllDeleteReq = new BllDeleteRequest(apiDeleteReq.id);
 
-        return res.json(req.body);
+        await this._usersService.deleteUserAsync(bllDeleteReq);
+
+        return res.json(apiDeleteReq.id);
+    }
+
+    async changeIsActiveUser(req: Request, res: Response, next: NextFunction) {
+
+        const apiReq: ApiChangeIsActiveUserRequest = req.body;
+
+        const bllReq = new BllChangeIsActiveUserRequest(apiReq.id, apiReq.isActive);
+
+        await this._usersService.changeIsActiveUserAsync(bllReq);
+
+        return res.json(apiReq.id);
     }
 }

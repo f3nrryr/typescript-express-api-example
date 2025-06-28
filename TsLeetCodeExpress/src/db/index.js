@@ -5,6 +5,7 @@ require("reflect-metadata");
 const typeorm_1 = require("typeorm");
 const User_1 = require("../db/User");
 const Task_1 = require("./Task");
+const TaskComplexity_1 = require("./TaskComplexity");
 exports.AppDataSource = new typeorm_1.DataSource({
     type: "postgres",
     host: "localhost",
@@ -12,7 +13,7 @@ exports.AppDataSource = new typeorm_1.DataSource({
     username: "postgres",
     password: "1234",
     database: "TsLeetCodeExpress",
-    entities: [User_1.User, Task_1.Task],
+    entities: [User_1.User, Task_1.Task, TaskComplexity_1.TaskComplexity],
     synchronize: true,
     logging: false
 });

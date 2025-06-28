@@ -1,5 +1,5 @@
-import { Task as BllTask } from "../../services/dto/Task";
-import { Task as ApiTask } from "../contractsDTOs/Task";
+import { Task as BllTask } from "../../services/dto/response/Task";
+import { Task as ApiTask } from "../contractsDTOs/res/Task";
 import { UserMapper } from "./UserMapper";
 
 export class TaskMapper {
