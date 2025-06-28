@@ -12,7 +12,6 @@ import { DeleteUserDTO } from "../repositories/dto/in/user/DeleteUserDTO";
 import { ChangeIsActiveUserRequest } from "./dto/request/user/ChangeIsActiveUserRequest";
 import { ChangeIsActiveUserDTO } from "../repositories/dto/in/user/ChangeIsActiveUserDTO";
 import { inject, injectable } from "inversify";
-import { UsersRepository } from "../repositories/UsersRepository";
 
 @injectable()
 export class UsersService implements IUsersService {

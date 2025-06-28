@@ -19,7 +19,7 @@ class UsersRoutes {
             await this._usersController.getUserByEmail(req, res, next);
         });
 
-        this.router.get(':/login', async (req, res, next) => {
+        this.router.get('/:login', async (req, res, next) => {
             await this._usersController.getUserByLogin(req, res, next);
         });
 

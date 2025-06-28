@@ -32,7 +32,7 @@ _UsersRoutes_instances = new WeakSet(), _UsersRoutes__initRoutes = function _Use
     this.router.get('/:email', (req, res, next) => __awaiter(this, void 0, void 0, function* () {
         yield this._usersController.getUserByEmail(req, res, next);
     }));
-    this.router.get(':/login', (req, res, next) => __awaiter(this, void 0, void 0, function* () {
+    this.router.get('/:login', (req, res, next) => __awaiter(this, void 0, void 0, function* () {
         yield this._usersController.getUserByLogin(req, res, next);
     }));
     this.router.post('/create', (req, res, next) => __awaiter(this, void 0, void 0, function* () {

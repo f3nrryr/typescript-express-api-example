@@ -13,17 +13,18 @@ const UsersRoutes_1 = require("./src/routes/UsersRoutes");
 const UsersController_1 = require("./src/controllers/UsersController");
 const body_parser_1 = __importDefault(require("body-parser"));
 const inversify_1 = require("inversify");
+const swagger_1 = require("./src/swagger"); // ��� ������� (�������, ��� ����).
 const diContainer = new inversify_1.Container();
 diContainer.bind('IUsersRepository').to(UsersRepository_1.UsersRepository);
 diContainer.bind('ITasksRepository').to(TasksRepository_1.TasksRepository);
 diContainer.bind('IUsersService').to(UsersService_1.UsersService);
 diContainer.bind('ITasksService').to(TasksService_1.TasksService);
-const usersController = new UsersController_1.UsersController(diContainer.get(UsersService_1.UsersService));
-//TODO: log decorator (req + res) + err-handler middleware + comments (api) + tests. cfg ����� ����. ���� ��� .env.
+const usersController = new UsersController_1.UsersController(diContainer.get('IUsersService'));
 const app = (0, express_1.default)();
 app.use(body_parser_1.default.json());
 app.use('/api/users', (0, UsersRoutes_1.createUsersRouter)(usersController));
 //app.use('/api/tasks',);
+(0, swagger_1.setupSwagger)(app);
 const PORT = 8082;
 app.listen(PORT, () => console.log(`Application started on ${PORT}`));
 //# sourceMappingURL=app.js.map

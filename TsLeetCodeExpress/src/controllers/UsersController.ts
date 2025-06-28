@@ -11,10 +11,14 @@ import { DeleteUserRequest as BllDeleteRequest } from "../services/dto/request/u
 import { ChangeIsActiveUserRequest as ApiChangeIsActiveUserRequest } from './contractsDTOs/req/user/ChangeIsActiveUserRequest';
 import { ChangeIsActiveUserRequest as BllChangeIsActiveUserRequest } from "../services/dto/request/user/ChangeIsActiveUserRequest";
 
+import { Route, Get, Post, Put, Delete, Patch, Body, Query, Path, SuccessResponse } from 'tsoa';
+
+@Route('users')
 export class UsersController {
 
     constructor(private _usersService: IUsersService) { }
 
+    @Get('{id}')
     async getUserById(req: Request, res: Response, next: NextFunction) {
 
         const bllUser = await this._usersService.getUserByIdAsync(Number(req.params.id));
@@ -24,6 +28,7 @@ export class UsersController {
         return res.json(apiContractUser);
     }
 
+    @Get('{login}')
     async getUserByLogin(req: Request, res: Response, next: NextFunction) {
 
         const bllUser = await this._usersService.getUserByLoginAsync(req.params.login);
@@ -33,6 +38,7 @@ export class UsersController {
         return res.json(apiContractUser);
     }
 
+    @Get('{email}')
     async getUserByEmail(req: Request, res: Response, next: NextFunction) {
 
         const bllUser = await this._usersService.getUserByEmailAsync(req.params.email);
@@ -42,6 +48,8 @@ export class UsersController {
         return res.json(apiContractUser);
     }
 
+    @Post()
+    @SuccessResponse('201', 'Created')
     async createUser(req: Request, res: Response, next: NextFunction) {
 
         const createUserApiReq: ApiCreateRequest = req.body;
@@ -53,6 +61,7 @@ export class UsersController {
         return res.json(createdUserId);
     }
 
+    @Put()
     async updateUser(req: Request, res: Response, next: NextFunction) {
 
         const updateUserApiReq: ApiUpdateRequest = req.body;
@@ -64,6 +73,7 @@ export class UsersController {
         return res.json(UserMapper.toApi(updatedUserBll));
     }
 
+    @Delete()
     async deleteUser(req: Request, res: Response, next: NextFunction) {
 
         const apiDeleteReq: ApiDeleteRequest = req.body;
@@ -75,6 +85,7 @@ export class UsersController {
         return res.json(apiDeleteReq.id);
     }
 
+    @Patch()
     async changeIsActiveUser(req: Request, res: Response, next: NextFunction) {
 
         const apiReq: ApiChangeIsActiveUserRequest = req.body;

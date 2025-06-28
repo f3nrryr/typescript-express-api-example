@@ -26,7 +26,7 @@ const index_1 = require("../db/index");
 const User_1 = require("../db/User");
 const UserMapper_1 = require("./mappers/UserMapper");
 const CustomError_1 = require("../repoAndBLL/CustomError");
-const injectable_1 = require("@inversifyjs/core/lib/cjs/metadata/decorators/injectable");
+const inversify_1 = require("inversify");
 let UsersRepository = class UsersRepository {
     constructor() {
         _UsersRepository__repository.set(this, index_1.AppDataSource.getRepository(User_1.User));
@@ -112,6 +112,6 @@ let UsersRepository = class UsersRepository {
 exports.UsersRepository = UsersRepository;
 _UsersRepository__repository = new WeakMap();
 exports.UsersRepository = UsersRepository = __decorate([
-    (0, injectable_1.injectable)()
+    (0, inversify_1.injectable)()
 ], UsersRepository);
 //# sourceMappingURL=UsersRepository.js.map

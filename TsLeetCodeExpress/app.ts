@@ -12,7 +12,10 @@ import { createUsersRouter } from "./src/routes/UsersRoutes";
 import { UsersController } from "./src/controllers/UsersController";
 import bodyParser from "body-parser";
 
-import { Container, inject, injectable } from 'inversify';
+import { Container } from 'inversify';
+
+import { setupSwagger } from './src/swagger'; // Сам Сваггер (базовый, без доки).
+import swaggerUi from 'swagger-ui-express';
 
 
 
@@ -23,7 +26,7 @@ diContainer.bind<ITasksRepository>('ITasksRepository').to(TasksRepository);
 diContainer.bind<IUsersService>('IUsersService').to(UsersService);
 diContainer.bind<ITasksService>('ITasksService').to(TasksService);
 
-const usersController = new UsersController(diContainer.get(UsersService));
+const usersController = new UsersController(diContainer.get('IUsersService'));
 
 const app = express();
 
@@ -31,6 +34,8 @@ app.use(bodyParser.json());
 
 app.use('/api/users', createUsersRouter(usersController));
 //app.use('/api/tasks',);
+
+setupSwagger(app);
 
 const PORT = 8082;
 
