@@ -1,5 +1,4 @@
 import "reflect-metadata"; // ƒл€ typeOrm. »мпортить в доке предлагают √ЋќЅјЋ№Ќќ.
-import { DIContainer } from '@wessberg/di';
 import { IUsersRepository } from "./src/repositories/interfaces/IUsersRepository";
 import { UsersRepository } from "./src/repositories/UsersRepository";
 import { ITasksRepository } from "./src/repositories/interfaces/ITasksRepository";
@@ -13,14 +12,18 @@ import { createUsersRouter } from "./src/routes/UsersRoutes";
 import { UsersController } from "./src/controllers/UsersController";
 import bodyParser from "body-parser";
 
-const diContainer = new DIContainer();
+import { Container, inject, injectable } from 'inversify';
 
-diContainer.registerTransient<IUsersRepository, UsersRepository>();
-diContainer.registerTransient<ITasksRepository, TasksRepository>();
-diContainer.registerTransient<IUsersService, UsersService>();
-diContainer.registerTransient<ITasksService, TasksService>();
 
-const usersController = new UsersController(diContainer.get<IUsersService>());
+
+const diContainer = new Container();
+
+diContainer.bind(UsersRepository).toSelf();
+diContainer.bind(TasksRepository).toSelf();
+diContainer.bind(UsersService).toSelf();
+diContainer.bind(TasksService).toSelf();
+
+const usersController = new UsersController(diContainer.get(UsersService));
 
 //TODO: log decorator (req + res) + err-handler middleware + comments (api) + tests. cfg через конф. файл или .env.
 

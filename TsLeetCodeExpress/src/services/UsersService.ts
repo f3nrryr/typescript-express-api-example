@@ -11,10 +11,13 @@ import { UpdateUserDTO } from "../repositories/dto/in/user/UpdateUserDTO";
 import { DeleteUserDTO } from "../repositories/dto/in/user/DeleteUserDTO";
 import { ChangeIsActiveUserRequest } from "./dto/request/user/ChangeIsActiveUserRequest";
 import { ChangeIsActiveUserDTO } from "../repositories/dto/in/user/ChangeIsActiveUserDTO";
+import { inject, injectable } from "inversify";
+import { UsersRepository } from "../repositories/UsersRepository";
 
+@injectable()
 export class UsersService implements IUsersService {
 
-    constructor(private _usersRepository: IUsersRepository) { }
+    constructor(@inject(UsersRepository) private readonly _usersRepository: IUsersRepository) { }
 
     public async getUserByIdAsync(id: number) : Promise<User> {
 

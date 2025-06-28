@@ -8,7 +8,9 @@ import { CreateTaskDTO } from "./dto/in/task/CreateTaskDTO";
 import { UpdateTaskDTO } from "./dto/in/task/UpdateTaskDTO";
 import { DeleteTaskDTO } from "./dto/in/task/DeleteTaskDTO";
 import { ChangeTaskVisibilityDTO } from "./dto/in/task/ChangeTaskVisibilityDTO";
+import { injectable } from "inversify";
 
+@injectable()
 export class TasksRepository implements ITasksRepository {
    
     #_repository = AppDataSource.getRepository(DbTask);
