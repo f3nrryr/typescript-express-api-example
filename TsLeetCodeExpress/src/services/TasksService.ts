@@ -4,7 +4,6 @@ import { CreateTaskDTO } from "../repositories/dto/in/task/CreateTaskDTO";
 import { DeleteTaskDTO } from "../repositories/dto/in/task/DeleteTaskDTO";
 import { UpdateTaskDTO } from "../repositories/dto/in/task/UpdateTaskDTO";
 import { ITasksRepository } from "../repositories/interfaces/ITasksRepository";
-import { TasksRepository } from "../repositories/TasksRepository";
 import { ChangeTaskVisibilityRequest } from "./dto/request/task/ChangeTaskVisibilityRequest";
 import { CreateTaskRequest } from "./dto/request/task/CreateTaskRequest";
 import { DeleteTaskRequest } from "./dto/request/task/DeleteTaskRequest";
@@ -12,12 +11,12 @@ import { UpdateTaskRequest } from "./dto/request/task/UpdateTaskRequest";
 import { Task } from "./dto/response/Task";
 import { ITasksService } from "./interfaces/ITasksService";
 import { TaskMapper } from "./mappers/TaskMapper";
-import { injectable } from "inversify";
+import { inject, injectable } from "inversify";
 
 @injectable()
 export class TasksService implements ITasksService {
 
-    constructor(@inject(TasksRepository) private readonly _tasksRepository: ITasksRepository) { }
+    constructor(@inject('ITasksRepository') private readonly _tasksRepository: ITasksRepository) { }
     
     public async getTaskByIdAsync(id: number): Promise<Task> {
 
@@ -77,8 +76,4 @@ export class TasksService implements ITasksService {
         return task.id;
     }
 
-}
-
-function inject(TasksRepository: any): (target: typeof TasksService, propertyKey: undefined, parameterIndex: 0) => void {
-    throw new Error("Function not implemented.");
 }

@@ -10,7 +10,6 @@ import { DeleteUserDTO } from "./dto/in/user/DeleteUserDTO";
 import { ChangeIsActiveUserDTO } from "./dto/in/user/ChangeIsActiveUserDTO";
 import { injectable } from "@inversifyjs/core/lib/cjs/metadata/decorators/injectable";
 
-
 @injectable()
 export class UsersRepository implements IUsersRepository {
 

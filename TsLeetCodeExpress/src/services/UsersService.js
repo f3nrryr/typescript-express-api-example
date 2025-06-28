@@ -29,7 +29,6 @@ const UpdateUserDTO_1 = require("../repositories/dto/in/user/UpdateUserDTO");
 const DeleteUserDTO_1 = require("../repositories/dto/in/user/DeleteUserDTO");
 const ChangeIsActiveUserDTO_1 = require("../repositories/dto/in/user/ChangeIsActiveUserDTO");
 const inversify_1 = require("inversify");
-const UsersRepository_1 = require("../repositories/UsersRepository");
 let UsersService = class UsersService {
     constructor(_usersRepository) {
         this._usersRepository = _usersRepository;
@@ -92,7 +91,7 @@ let UsersService = class UsersService {
 exports.UsersService = UsersService;
 exports.UsersService = UsersService = __decorate([
     (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(UsersRepository_1.UsersRepository)),
+    __param(0, (0, inversify_1.inject)('IUsersRepository')),
     __metadata("design:paramtypes", [Object])
 ], UsersService);
 //# sourceMappingURL=UsersService.js.map

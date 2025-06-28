@@ -17,7 +17,7 @@ import { UsersRepository } from "../repositories/UsersRepository";
 @injectable()
 export class UsersService implements IUsersService {
 
-    constructor(@inject(UsersRepository) private readonly _usersRepository: IUsersRepository) { }
+    constructor(@inject('IUsersRepository') private readonly _usersRepository: IUsersRepository) { }
 
     public async getUserByIdAsync(id: number) : Promise<User> {
 

@@ -27,7 +27,6 @@ const ChangeTaskVisibilityDTO_1 = require("../repositories/dto/in/task/ChangeTas
 const CreateTaskDTO_1 = require("../repositories/dto/in/task/CreateTaskDTO");
 const DeleteTaskDTO_1 = require("../repositories/dto/in/task/DeleteTaskDTO");
 const UpdateTaskDTO_1 = require("../repositories/dto/in/task/UpdateTaskDTO");
-const TasksRepository_1 = require("../repositories/TasksRepository");
 const TaskMapper_1 = require("./mappers/TaskMapper");
 const inversify_1 = require("inversify");
 let TasksService = class TasksService {
@@ -83,10 +82,7 @@ let TasksService = class TasksService {
 exports.TasksService = TasksService;
 exports.TasksService = TasksService = __decorate([
     (0, inversify_1.injectable)(),
-    __param(0, inject(TasksRepository_1.TasksRepository)),
+    __param(0, (0, inversify_1.inject)('ITasksRepository')),
     __metadata("design:paramtypes", [Object])
 ], TasksService);
-function inject(TasksRepository) {
-    throw new Error("Function not implemented.");
-}
 //# sourceMappingURL=TasksService.js.map

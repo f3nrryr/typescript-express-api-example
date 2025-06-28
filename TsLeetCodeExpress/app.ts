@@ -18,14 +18,12 @@ import { Container, inject, injectable } from 'inversify';
 
 const diContainer = new Container();
 
-diContainer.bind(UsersRepository).toSelf();
-diContainer.bind(TasksRepository).toSelf();
-diContainer.bind(UsersService).toSelf();
-diContainer.bind(TasksService).toSelf();
+diContainer.bind<IUsersRepository>('IUsersRepository').to(UsersRepository);
+diContainer.bind<ITasksRepository>('ITasksRepository').to(TasksRepository);
+diContainer.bind<IUsersService>('IUsersService').to(UsersService);
+diContainer.bind<ITasksService>('ITasksService').to(TasksService);
 
 const usersController = new UsersController(diContainer.get(UsersService));
-
-//TODO: log decorator (req + res) + err-handler middleware + comments (api) + tests. cfg через конф. файл или .env.
 
 const app = express();
 

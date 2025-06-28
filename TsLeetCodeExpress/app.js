@@ -14,10 +14,10 @@ const UsersController_1 = require("./src/controllers/UsersController");
 const body_parser_1 = __importDefault(require("body-parser"));
 const inversify_1 = require("inversify");
 const diContainer = new inversify_1.Container();
-diContainer.bind(UsersRepository_1.UsersRepository).toSelf();
-diContainer.bind(TasksRepository_1.TasksRepository).toSelf();
-diContainer.bind(UsersService_1.UsersService).toSelf();
-diContainer.bind(TasksService_1.TasksService).toSelf();
+diContainer.bind('IUsersRepository').to(UsersRepository_1.UsersRepository);
+diContainer.bind('ITasksRepository').to(TasksRepository_1.TasksRepository);
+diContainer.bind('IUsersService').to(UsersService_1.UsersService);
+diContainer.bind('ITasksService').to(TasksService_1.TasksService);
 const usersController = new UsersController_1.UsersController(diContainer.get(UsersService_1.UsersService));
 //TODO: log decorator (req + res) + err-handler middleware + comments (api) + tests. cfg ����� ����. ���� ��� .env.
 const app = (0, express_1.default)();
