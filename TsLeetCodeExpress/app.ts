@@ -11,18 +11,47 @@ import express, { Express } from 'express';
 import { registerUsersRoutes } from "./src/routes/UsersRoutes";
 import { UsersController } from "./src/controllers/UsersController";
 import bodyParser from "body-parser";
-import { AppDataSource } from "./src/db/index";
+
+import { config } from "dotenv";
+import { AppDataSource, InitDataSource } from "./src/db/index";
 
 import { Container } from 'inversify';
 
 import swaggerUi from "swagger-ui-express";
 import { swagger } from "./src/swaggerOutput";
+import { DataSourceInfoDTO } from "./src/db/DataSourceInitDTO";
 
 
 
+config({ path: "./.env" });
 const diContainer = new Container();
 
-AppDataSource.initialize(); // Нужно иметь ранее созданную бд.
+const envVars = {
+    port: process.env.PORT || 5000,
+    nodeEnv: process.env.NODE_ENV as "development" | "production",
+    dbType: process.env.DB_TYPE,
+    dbHost: process.env.DB_HOST,
+    dbPort: process.env.DB_PORT,
+    dbUserName: process.env.DB_USERNAME,
+    dbPassword: process.env.DB_PASSWORD, // todo: по-хорошему, надо шифровать, но для пет-проекта too much.
+    dbName: process.env.DB_NAME,
+    dbSynchronize: process.env.DB_SYNCHRONIZE,
+    dbLogging: process.env.DB_LOGGING
+};
+export default function getEnv(varName: keyof typeof envVars): string {
+    if (typeof envVars[varName] === "undefined") {
+        console.error(`'${varName}' is not available`);
+        process.exit(1);
+    } else {
+        return envVars[varName] as string;
+    }
+}
+
+const appDataSource = InitDataSource
+    (new DataSourceInfoDTO
+        (getEnv("dbHost"), getEnv("dbHost"), Number(getEnv("dbPort")), getEnv("dbUserName"),
+         getEnv("dbPassword"), getEnv("dbName"), Boolean(getEnv("dbSynchronize")), Boolean(getEnv("dbLogging")))
+    ); // Нужно иметь ранее созданную бд физически.
 
 diContainer.bind<IUsersRepository>('IUsersRepository').to(UsersRepository);
 diContainer.bind<ITasksRepository>('ITasksRepository').to(TasksRepository);
@@ -40,6 +69,6 @@ app.use('/api/users', registerUsersRoutes(usersController));
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swagger));
 
-const PORT = 8082;
+const PORT = Number(getEnv("port"));
 
 app.listen(PORT, () => console.log(`Application started on ${PORT}`));

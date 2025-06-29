@@ -22,10 +22,6 @@ class UsersRoutes {
 // ��������� ������� ��� �������� �������:
 const registerUsersRoutes = (usersController) => {
     const userRoutes = new UsersRoutes(usersController).router;
-    console.log(userRoutes.stack.length);
-    userRoutes.stack.forEach((x) => {
-        console.log(`${x.method} ${x.path} ${x.name} ${x.keys} ${x.route} ${x.params}`);
-    });
     return userRoutes;
 };
 exports.registerUsersRoutes = registerUsersRoutes;
