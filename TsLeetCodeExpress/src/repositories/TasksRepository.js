@@ -23,7 +23,7 @@ var _TasksRepository__repository;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TasksRepository = void 0;
 const index_1 = require("../db/index");
-const Task_1 = require("../db/Task");
+const Task_1 = require("../db/entities/Task");
 const TaskMapper_1 = require("./mappers/TaskMapper");
 const CustomError_1 = require("../repoAndBLL/CustomError");
 const inversify_1 = require("inversify");

@@ -1,17 +1,17 @@
 import "reflect-metadata";
 import { DataSource } from "typeorm";
-import { User } from "../db/User"
-import { Task } from "./Task"
-import { TaskComplexity } from "./TaskComplexity";
+import { User } from "../db/entities/User"
+import { Task } from "./entities/Task"
+import { TaskComplexity } from "./entities/TaskComplexity";
 
 export const AppDataSource = new DataSource({
     type: "postgres",
     host: "localhost",
     port: 5433,
     username: "postgres",
-    password: "1234",
+    password: "123",
     database: "TsLeetCodeExpress",
     entities: [User, Task, TaskComplexity],
     synchronize: true,
-    logging: false
+    logging: true
 });

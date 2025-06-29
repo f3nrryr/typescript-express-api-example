@@ -15,7 +15,7 @@ export class TaskMapper {
 
         const solvedByMapped = task.solvedBy.map(UserMapper.toRepo);
 
-        return new ServiceTask(task.id, task.title, task.description, task.createdAt, task.isVisible, solvedByMapped);
+        return new RepoTask(task.id, task.title, task.description, task.createdAt, task.isVisible, solvedByMapped);
     }
 
 }

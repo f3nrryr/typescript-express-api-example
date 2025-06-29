@@ -1,48 +1,27 @@
 import { Router } from 'express';
 import { UsersController } from '../controllers/UsersController';
+import { register, getRoutes } from "express-decorators";
 
 class UsersRoutes {
-
-    router = Router();
+    router: Router = Router();
 
     constructor(private _usersController: UsersController) {
-        this.#_initRoutes();
+        this._initRoutes();
     }
 
-    #_initRoutes() {
-
-        this.router.get('/:id', async (req, res, next) => {
-            await this._usersController.getUserById(req, res, next);
-        });
-
-        this.router.get('/:email', async (req, res, next) => {
-            await this._usersController.getUserByEmail(req, res, next);
-        });
-
-        this.router.get('/:login', async (req, res, next) => {
-            await this._usersController.getUserByLogin(req, res, next);
-        });
-
-        this.router.post('/create', async (req, res, next) => {
-            await this._usersController.createUser(req, res, next);
-        });
-
-        this.router.post('/isActive', async (req, res, next) => {
-            await this._usersController.changeIsActiveUser(req, res, next);
-        });
-
-        this.router.put('/', async (req, res, next) => {
-            await this._usersController.updateUser(req, res, next);
-        });
-
-        this.router.delete('/', async (req, res, next) => {
-            await this._usersController.deleteUser(req, res, next);
-        });
-
+    private _initRoutes() {
+        // Register decorated routes from the controller
+        const routes = getRoutes(this._usersController);
+        routes.forEach((r) => {
+            console.log(`${r.method} ${r.path}`);
+        })
+        console.log(`routes: ${routes.length}`);
+        register(this.router, routes);
     }
 }
 
 // Фабричная функция для создания роутера:
-export const createUsersRouter = (usersController: UsersController) => {
-    return new UsersRoutes(usersController).router;
+export const registerUsersRoutes = (usersController: UsersController) => {
+    const userRoutes = new UsersRoutes(usersController).router;
+    return userRoutes;
 };

@@ -8,14 +8,14 @@ export class UserMapper {
 
         const userSolvedTasks = user.solvedTasks.map(TaskMapper.toBLL);
 
-        return new RepoUser(user.id, user.login, user.email, user.passwordHash, user.isActive, user.createdAt, userSolvedTasks);
+        return new ServiceUser(user.id, user.login, user.email, user.isActive, user.createdAt, userSolvedTasks);
     }
 
     public static toRepo(user: ServiceUser): RepoUser {
 
         const userSolvedTasks = user.solvedTasks.map(TaskMapper.toRepo);
 
-        return new RepoUser(user.id, user.login, user.email, user.passwordHash, user.isActive, user.createdAt, userSolvedTasks);
+        return new RepoUser(user.id, user.login, user.email, "", user.isActive, user.createdAt, userSolvedTasks);
     }
 
 }

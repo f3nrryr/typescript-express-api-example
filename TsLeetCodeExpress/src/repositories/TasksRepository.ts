@@ -1,5 +1,5 @@
 import { AppDataSource } from "../db/index";
-import { Task as DbTask } from "../db/Task";
+import { Task as DbTask } from "../db/entities/Task";
 import { TaskMapper } from "./mappers/TaskMapper";
 import { CustomError } from "../repoAndBLL/CustomError";
 import { ITasksRepository } from "./interfaces/ITasksRepository";

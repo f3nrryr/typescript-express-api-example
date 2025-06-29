@@ -4,7 +4,7 @@
     "@wessberg/di": "^3.0.2",
     "@wessberg/di-compiler": "^4.0.2",
     "body-parser": "^2.2.0",
-    "inversify": "^7.5.4",
+    "inversify": "^7.0.0-alpha.5",
     "pg": "^8.16.3",
     "reflect-metadata": "^0.2.2",
     "swagger-jsdoc": "^6.2.8",
@@ -16,6 +16,7 @@
     "@types/node": "^24.0.7",
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.8",
+    "swagger-typescript-api": "^13.2.7",
     "typescript": "^5.8.3"
   }
 }

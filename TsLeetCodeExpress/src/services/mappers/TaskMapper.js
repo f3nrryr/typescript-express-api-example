@@ -1,12 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TaskMapper = void 0;
-const Task_1 = require("../dto/response/Task");
+const Task_1 = require("../../repositories/dto/out/Task");
+const Task_2 = require("../dto/response/Task");
 const UserMapper_1 = require("./UserMapper");
 class TaskMapper {
     static toBLL(task) {
         const solvedByMapped = task.solvedBy.map(UserMapper_1.UserMapper.toBLL);
-        return new Task_1.Task(task.id, task.title, task.description, task.createdAt, task.isVisible, solvedByMapped);
+        return new Task_2.Task(task.id, task.title, task.description, task.createdAt, task.isVisible, solvedByMapped);
     }
     static toRepo(task) {
         const solvedByMapped = task.solvedBy.map(UserMapper_1.UserMapper.toRepo);

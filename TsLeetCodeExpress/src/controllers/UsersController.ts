@@ -11,46 +11,44 @@ import { DeleteUserRequest as BllDeleteRequest } from "../services/dto/request/u
 import { ChangeIsActiveUserRequest as ApiChangeIsActiveUserRequest } from './contractsDTOs/req/user/ChangeIsActiveUserRequest';
 import { ChangeIsActiveUserRequest as BllChangeIsActiveUserRequest } from "../services/dto/request/user/ChangeIsActiveUserRequest";
 
-import { Route, Get, Post, Put, Delete, Patch, Body, Query, Path, SuccessResponse } from 'tsoa';
+import { get, post, patch, put, del } from "express-decorators";
 
-@Route('users')
 export class UsersController {
 
     constructor(private _usersService: IUsersService) { }
 
-    @Get('{id}')
+    @get(`/id/:id`)
     async getUserById(req: Request, res: Response, next: NextFunction) {
 
         const bllUser = await this._usersService.getUserByIdAsync(Number(req.params.id));
 
         const apiContractUser = UserMapper.toApi(bllUser);
 
-        return res.json(apiContractUser);
+        res.json(apiContractUser);
     }
 
-    @Get('{login}')
+    @get(`/login/:login`)
     async getUserByLogin(req: Request, res: Response, next: NextFunction) {
 
         const bllUser = await this._usersService.getUserByLoginAsync(req.params.login);
 
         const apiContractUser = UserMapper.toApi(bllUser);
 
-        return res.json(apiContractUser);
+        res.json(apiContractUser);
     }
 
-    @Get('{email}')
+    @get(`/email/:email`)
     async getUserByEmail(req: Request, res: Response, next: NextFunction) {
 
         const bllUser = await this._usersService.getUserByEmailAsync(req.params.email);
 
         const apiContractUser = UserMapper.toApi(bllUser);
 
-        return res.json(apiContractUser);
+        res.json(apiContractUser);
     }
 
-    @Post()
-    @SuccessResponse('201', 'Created')
-    async createUser(req: Request, res: Response, next: NextFunction) {
+    @post('/create')
+    async createUser(req: Request<{}, {}, ApiCreateRequest>, res: Response, next: NextFunction) {
 
         const createUserApiReq: ApiCreateRequest = req.body;
 
@@ -58,11 +56,11 @@ export class UsersController {
 
         const createdUserId = await this._usersService.createUserAsync(bllCreateUserReq);
 
-        return res.json(createdUserId);
+        res.json(createdUserId);
     }
 
-    @Put()
-    async updateUser(req: Request, res: Response, next: NextFunction) {
+    @put()
+    async updateUser(req: Request<{}, {}, ApiUpdateRequest>, res: Response, next: NextFunction) {
 
         const updateUserApiReq: ApiUpdateRequest = req.body;
 
@@ -70,10 +68,10 @@ export class UsersController {
 
         const updatedUserBll = await this._usersService.updateUserAsync(bllUpdateUserReq);
 
-        return res.json(UserMapper.toApi(updatedUserBll));
+        res.json(UserMapper.toApi(updatedUserBll));
     }
 
-    @Delete()
+    @del()
     async deleteUser(req: Request, res: Response, next: NextFunction) {
 
         const apiDeleteReq: ApiDeleteRequest = req.body;
@@ -82,10 +80,10 @@ export class UsersController {
 
         await this._usersService.deleteUserAsync(bllDeleteReq);
 
-        return res.json(apiDeleteReq.id);
+        res.json(apiDeleteReq.id);
     }
 
-    @Patch()
+    @patch()
     async changeIsActiveUser(req: Request, res: Response, next: NextFunction) {
 
         const apiReq: ApiChangeIsActiveUserRequest = req.body;
@@ -94,6 +92,6 @@ export class UsersController {
 
         await this._usersService.changeIsActiveUserAsync(bllReq);
 
-        return res.json(apiReq.id);
+        res.json(apiReq.id);
     }
 }

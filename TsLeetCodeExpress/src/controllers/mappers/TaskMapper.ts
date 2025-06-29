@@ -11,11 +11,4 @@ export class TaskMapper {
         return new ApiTask(task.id, task.title, task.description, task.createdAt, task.isVisible, solvedByMapped);
     }
 
-    public static toBLL(task: ApiTask): BllTask {
-
-        const solvedByMapped = task.solvedBy.map(UserMapper.toBLL);
-
-        return new BllTask(task.id, task.title, task.description, task.createdAt, task.isVisible, solvedByMapped);
-    }
-
 }

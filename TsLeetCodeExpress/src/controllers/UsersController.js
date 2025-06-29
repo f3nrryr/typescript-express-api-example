@@ -24,8 +24,8 @@ const CreateUserRequest_1 = require("../services/dto/request/user/CreateUserRequ
 const UpdateUserRequest_1 = require("../services/dto/request/user/UpdateUserRequest");
 const DeleteUserRequest_1 = require("../services/dto/request/user/DeleteUserRequest");
 const ChangeIsActiveUserRequest_1 = require("../services/dto/request/user/ChangeIsActiveUserRequest");
-const tsoa_1 = require("tsoa");
-let UsersController = class UsersController {
+const express_decorators_1 = require("express-decorators");
+class UsersController {
     constructor(_usersService) {
         this._usersService = _usersService;
     }
@@ -33,21 +33,21 @@ let UsersController = class UsersController {
         return __awaiter(this, void 0, void 0, function* () {
             const bllUser = yield this._usersService.getUserByIdAsync(Number(req.params.id));
             const apiContractUser = UserMapper_1.UserMapper.toApi(bllUser);
-            return res.json(apiContractUser);
+            res.json(apiContractUser);
         });
     }
     getUserByLogin(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             const bllUser = yield this._usersService.getUserByLoginAsync(req.params.login);
             const apiContractUser = UserMapper_1.UserMapper.toApi(bllUser);
-            return res.json(apiContractUser);
+            res.json(apiContractUser);
         });
     }
     getUserByEmail(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             const bllUser = yield this._usersService.getUserByEmailAsync(req.params.email);
             const apiContractUser = UserMapper_1.UserMapper.toApi(bllUser);
-            return res.json(apiContractUser);
+            res.json(apiContractUser);
         });
     }
     createUser(req, res, next) {
@@ -55,7 +55,7 @@ let UsersController = class UsersController {
             const createUserApiReq = req.body;
             const bllCreateUserReq = new CreateUserRequest_1.CreateUserRequest(createUserApiReq.login, createUserApiReq.email, createUserApiReq.passwordHash);
             const createdUserId = yield this._usersService.createUserAsync(bllCreateUserReq);
-            return res.json(createdUserId);
+            res.json(createdUserId);
         });
     }
     updateUser(req, res, next) {
@@ -63,7 +63,7 @@ let UsersController = class UsersController {
             const updateUserApiReq = req.body;
             const bllUpdateUserReq = new UpdateUserRequest_1.UpdateUserRequest(updateUserApiReq.id, updateUserApiReq.newEmail, updateUserApiReq.newPasswordHash);
             const updatedUserBll = yield this._usersService.updateUserAsync(bllUpdateUserReq);
-            return res.json(UserMapper_1.UserMapper.toApi(updatedUserBll));
+            res.json(UserMapper_1.UserMapper.toApi(updatedUserBll));
         });
     }
     deleteUser(req, res, next) {
@@ -71,7 +71,7 @@ let UsersController = class UsersController {
             const apiDeleteReq = req.body;
             const bllDeleteReq = new DeleteUserRequest_1.DeleteUserRequest(apiDeleteReq.id);
             yield this._usersService.deleteUserAsync(bllDeleteReq);
-            return res.json(apiDeleteReq.id);
+            res.json(apiDeleteReq.id);
         });
     }
     changeIsActiveUser(req, res, next) {
@@ -79,56 +79,51 @@ let UsersController = class UsersController {
             const apiReq = req.body;
             const bllReq = new ChangeIsActiveUserRequest_1.ChangeIsActiveUserRequest(apiReq.id, apiReq.isActive);
             yield this._usersService.changeIsActiveUserAsync(bllReq);
-            return res.json(apiReq.id);
+            res.json(apiReq.id);
         });
     }
-};
+}
 exports.UsersController = UsersController;
 __decorate([
-    (0, tsoa_1.Get)('{id}'),
+    (0, express_decorators_1.get)(`/id/:id`),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, Object, Function]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "getUserById", null);
 __decorate([
-    (0, tsoa_1.Get)('{login}'),
+    (0, express_decorators_1.get)(`/login/:login`),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, Object, Function]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "getUserByLogin", null);
 __decorate([
-    (0, tsoa_1.Get)('{email}'),
+    (0, express_decorators_1.get)(`/email/:email`),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, Object, Function]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "getUserByEmail", null);
 __decorate([
-    (0, tsoa_1.Post)(),
-    (0, tsoa_1.SuccessResponse)('201', 'Created'),
+    (0, express_decorators_1.post)('/create'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, Object, Function]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "createUser", null);
 __decorate([
-    (0, tsoa_1.Put)(),
+    (0, express_decorators_1.put)(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, Object, Function]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "updateUser", null);
 __decorate([
-    (0, tsoa_1.Delete)(),
+    (0, express_decorators_1.del)(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, Object, Function]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "deleteUser", null);
 __decorate([
-    (0, tsoa_1.Patch)(),
+    (0, express_decorators_1.patch)(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, Object, Function]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "changeIsActiveUser", null);
-exports.UsersController = UsersController = __decorate([
-    (0, tsoa_1.Route)('users'),
-    __metadata("design:paramtypes", [Object])
-], UsersController);
 //# sourceMappingURL=UsersController.js.map

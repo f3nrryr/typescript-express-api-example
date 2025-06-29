@@ -1,5 +1,5 @@
 import { Task as RepoTask } from "../dto/out/Task";
-import { Task as DbTask } from "..//../db/Task";
+import { Task as DbTask } from "..//../db/entities/Task";
 import { UserMapper } from "./UserMapper";
 
 export class TaskMapper {

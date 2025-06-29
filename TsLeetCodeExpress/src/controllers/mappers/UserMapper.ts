@@ -8,14 +8,6 @@ export class UserMapper {
 
         const userSolvedTasks = user.solvedTasks.map(TaskMapper.toApi);
 
-        return new ApiUser(user.id, user.login, user.email, user.passwordHash, user.isActive, user.createdAt, userSolvedTasks);
+        return new ApiUser(user.id, user.login, user.email, user.isActive, user.createdAt, userSolvedTasks);
     }
-
-    public static toBLL(user: ApiUser): BllUser {
-
-        const userSolvedTasks = user.solvedTasks.map(TaskMapper.toBLL);
-
-        return new BllUser(user.id, user.login, user.email, user.passwordHash, user.isActive, user.createdAt, userSolvedTasks);
-    }
-
 }

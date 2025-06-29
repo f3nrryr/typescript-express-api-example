@@ -1,5 +1,5 @@
 import { AppDataSource } from "../db/index";
-import { User as DbUser } from "../db/User";
+import { User as DbUser } from "../db/entities/User";
 import { User as RepoUser } from "../repositories/dto/out/User"
 import { IUsersRepository } from "./interfaces/IUsersRepository";
 import { UserMapper } from "./mappers/UserMapper";

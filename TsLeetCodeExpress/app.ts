@@ -8,18 +8,21 @@ import { UsersService } from "./src/services/UsersService";
 import { ITasksService } from "./src/services/interfaces/ITasksService";
 import { TasksService } from "./src/services/TasksService";
 import express, { Express } from 'express';
-import { createUsersRouter } from "./src/routes/UsersRoutes";
+import { registerUsersRoutes } from "./src/routes/UsersRoutes";
 import { UsersController } from "./src/controllers/UsersController";
 import bodyParser from "body-parser";
+import { AppDataSource } from "./src/db/index";
 
 import { Container } from 'inversify';
 
-import { setupSwagger } from './src/swagger'; // Сам Сваггер (базовый, без доки).
-import swaggerUi from 'swagger-ui-express';
+import swaggerUi from "swagger-ui-express";
+import { swagger } from "./src/swaggerOutput";
 
 
 
 const diContainer = new Container();
+
+AppDataSource.initialize(); // Нужно иметь ранее созданную бд.
 
 diContainer.bind<IUsersRepository>('IUsersRepository').to(UsersRepository);
 diContainer.bind<ITasksRepository>('ITasksRepository').to(TasksRepository);
@@ -32,10 +35,10 @@ const app = express();
 
 app.use(bodyParser.json());
 
-app.use('/api/users', createUsersRouter(usersController));
+app.use('/api/users', registerUsersRoutes(usersController));
 //app.use('/api/tasks',);
 
-setupSwagger(app);
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swagger));
 
 const PORT = 8082;
 

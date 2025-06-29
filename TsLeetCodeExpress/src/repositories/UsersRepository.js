@@ -23,7 +23,7 @@ var _UsersRepository__repository;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UsersRepository = void 0;
 const index_1 = require("../db/index");
-const User_1 = require("../db/User");
+const User_1 = require("../db/entities/User");
 const UserMapper_1 = require("./mappers/UserMapper");
 const CustomError_1 = require("../repoAndBLL/CustomError");
 const inversify_1 = require("inversify");
