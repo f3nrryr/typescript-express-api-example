@@ -25,9 +25,11 @@ const UpdateUserRequest_1 = require("../services/dto/request/user/UpdateUserRequ
 const DeleteUserRequest_1 = require("../services/dto/request/user/DeleteUserRequest");
 const ChangeIsActiveUserRequest_1 = require("../services/dto/request/user/ChangeIsActiveUserRequest");
 const express_decorators_1 = require("express-decorators");
+const logDecorator_1 = require("../logger/logDecorator");
 class UsersController {
-    constructor(_usersService) {
+    constructor(_usersService, _logger) {
         this._usersService = _usersService;
+        this._logger = _logger;
     }
     getUserById(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -86,6 +88,7 @@ class UsersController {
 exports.UsersController = UsersController;
 __decorate([
     (0, express_decorators_1.get)(`/id/:id`),
+    (0, logDecorator_1.LogRequestResponse)(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, Object, Function]),
     __metadata("design:returntype", Promise)
@@ -126,4 +129,7 @@ __decorate([
     __metadata("design:paramtypes", [Object, Object, Function]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "changeIsActiveUser", null);
+function inject(arg0) {
+    throw new Error('Function not implemented.');
+}
 //# sourceMappingURL=UsersController.js.map

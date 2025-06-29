@@ -12,12 +12,16 @@ import { ChangeIsActiveUserRequest as ApiChangeIsActiveUserRequest } from './con
 import { ChangeIsActiveUserRequest as BllChangeIsActiveUserRequest } from "../services/dto/request/user/ChangeIsActiveUserRequest";
 
 import { get, post, patch, put, del } from "express-decorators";
+import { ILogger } from '../logger/loggers';
+import { LogRequestResponse } from '../logger/logDecorator';
 
 export class UsersController {
 
-    constructor(private _usersService: IUsersService) { }
+    constructor(private readonly _usersService: IUsersService,
+                private readonly _logger : ILogger) { }
 
     @get(`/id/:id`)
+    @LogRequestResponse()
     async getUserById(req: Request, res: Response, next: NextFunction) {
 
         const bllUser = await this._usersService.getUserByIdAsync(Number(req.params.id));
@@ -94,4 +98,8 @@ export class UsersController {
 
         res.json(apiReq.id);
     }
+}
+
+function inject(arg0: string): (target: typeof UsersController, propertyKey: undefined, parameterIndex: 0) => void {
+    throw new Error('Function not implemented.');
 }

@@ -24,6 +24,7 @@ import { DbHealthCheck } from "./src/healthz/dbHealthCheck";
 import { HealthService } from "./src/healthz/health-service";
 import { ResourceHealth } from "./src/healthz/health-indicator";
 import { DataSource } from "typeorm";
+import { ConsoleLogger, ILogger } from "./src/logger/loggers";
 
 
 
@@ -63,8 +64,9 @@ diContainer.bind<IUsersRepository>('IUsersRepository').to(UsersRepository);
 diContainer.bind<ITasksRepository>('ITasksRepository').to(TasksRepository);
 diContainer.bind<IUsersService>('IUsersService').to(UsersService);
 diContainer.bind<ITasksService>('ITasksService').to(TasksService);
+diContainer.bind<ILogger>('ILogger').to(ConsoleLogger);
 
-const usersController = new UsersController(diContainer.get('IUsersService'));
+const usersController = new UsersController(diContainer.get('IUsersService'), diContainer.get('ILogger'));
 
 const app = express();
 

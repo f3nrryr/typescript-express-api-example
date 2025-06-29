@@ -31,6 +31,7 @@ const DataSourceInitDTO_1 = require("./src/db/DataSourceInitDTO");
 const dbHealthCheck_1 = require("./src/healthz/dbHealthCheck");
 const health_service_1 = require("./src/healthz/health-service");
 const health_indicator_1 = require("./src/healthz/health-indicator");
+const loggers_1 = require("./src/logger/loggers");
 (0, dotenv_1.config)({ path: "./.env" });
 const envVars = {
     port: process.env.PORT || 5000,
@@ -61,7 +62,8 @@ diContainer.bind('IUsersRepository').to(UsersRepository_1.UsersRepository);
 diContainer.bind('ITasksRepository').to(TasksRepository_1.TasksRepository);
 diContainer.bind('IUsersService').to(UsersService_1.UsersService);
 diContainer.bind('ITasksService').to(TasksService_1.TasksService);
-const usersController = new UsersController_1.UsersController(diContainer.get('IUsersService'));
+diContainer.bind('ILogger').to(loggers_1.ConsoleLogger);
+const usersController = new UsersController_1.UsersController(diContainer.get('IUsersService'), diContainer.get('ILogger'));
 const app = (0, express_1.default)();
 app.use(body_parser_1.default.json());
 //HEALTHCHECK:
