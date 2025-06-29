@@ -32,7 +32,9 @@ const dbHealthCheck_1 = require("./src/healthz/dbHealthCheck");
 const health_service_1 = require("./src/healthz/health-service");
 const health_indicator_1 = require("./src/healthz/health-indicator");
 const loggers_1 = require("./src/logger/loggers");
+const helmet_1 = __importDefault(require("helmet"));
 const cors_1 = __importDefault(require("cors"));
+const morgan_1 = __importDefault(require("morgan"));
 (0, dotenv_1.config)({ path: "./.env" });
 const envVars = {
     port: process.env.PORT || 5000,
@@ -70,7 +72,26 @@ diContainer.bind('ILogger').to(loggers_1.ConsoleLogger);
 const usersController = new UsersController_1.UsersController(diContainer.get('IUsersService'), diContainer.get('ILogger'));
 const app = (0, express_1.default)();
 app.use(body_parser_1.default.json());
+app.use((0, helmet_1.default)()); // Security headers
 app.use((0, cors_1.default)(corsOptions));
+app.use((0, morgan_1.default)("combined")); // Logging
+app.use(express_1.default.urlencoded({ extended: true })); // Parse URL-encoded bodies
+//// 404 handler
+//app.use("*", (req, res) => {
+//    res.status(404).json({ error: "Route not found" });
+//});
+//// Error handling middleware
+//app.use(
+//    (
+//        err: Error,
+//        req: express.Request,
+//        res: express.Response,
+//        next: express.NextFunction
+//    ) => {
+//        console.error(err.stack);
+//        res.status(500).json({ error: "Something went wrong!" });
+//    }
+//);
 //HEALTHCHECK:
 app.use('/healthz', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const healthService = new health_service_1.HealthService([

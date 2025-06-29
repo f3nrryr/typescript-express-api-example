@@ -26,7 +26,10 @@ import { ResourceHealth } from "./src/healthz/health-indicator";
 import { DataSource } from "typeorm";
 import { ConsoleLogger, ILogger } from "./src/logger/loggers";
 
+import helmet from "helmet";
 import cors, { CorsOptions } from "cors";
+
+import morgan from "morgan";
 
 
 
@@ -78,7 +81,28 @@ const app = express();
 
 app.use(bodyParser.json());
 
+app.use(helmet()); // Security headers
 app.use(cors(corsOptions));
+app.use(morgan("combined")); // Logging
+app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
+
+//// 404 handler
+//app.use("*", (req, res) => {
+//    res.status(404).json({ error: "Route not found" });
+//});
+
+//// Error handling middleware
+//app.use(
+//    (
+//        err: Error,
+//        req: express.Request,
+//        res: express.Response,
+//        next: express.NextFunction
+//    ) => {
+//        console.error(err.stack);
+//        res.status(500).json({ error: "Something went wrong!" });
+//    }
+//);
 
 //HEALTHCHECK:
 app.use('/healthz', async (req, res) => {
