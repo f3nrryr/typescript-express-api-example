@@ -8,6 +8,7 @@ import { DataSourceInfoDTO } from "./DataSourceInitDTO";
 export let AppDataSource: DataSource;
 
 export const InitDataSource = (dsInfoDTO: DataSourceInfoDTO): DataSource => {
+
     AppDataSource = new DataSource({
         type: "postgres",
         host: dsInfoDTO.DbHost,
@@ -19,6 +20,8 @@ export const InitDataSource = (dsInfoDTO: DataSourceInfoDTO): DataSource => {
         synchronize: dsInfoDTO.DbSynchronize,
         logging: dsInfoDTO.DbLogging
     });
+
+    AppDataSource.initialize();
 
     return AppDataSource;
 };

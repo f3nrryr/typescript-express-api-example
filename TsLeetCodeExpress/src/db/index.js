@@ -18,6 +18,7 @@ const InitDataSource = (dsInfoDTO) => {
         synchronize: dsInfoDTO.DbSynchronize,
         logging: dsInfoDTO.DbLogging
     });
+    exports.AppDataSource.initialize();
     return exports.AppDataSource;
 };
 exports.InitDataSource = InitDataSource;

@@ -1,4 +1,3 @@
-import { AppDataSource } from "../db/index";
 import { User as DbUser } from "../db/entities/User";
 import { User as RepoUser } from "../repositories/dto/out/User"
 import { IUsersRepository } from "./interfaces/IUsersRepository";
@@ -8,12 +7,17 @@ import { CreateUserDTO } from "./dto/in/user/CreateUserDTO";
 import { UpdateUserDTO } from "./dto/in/user/UpdateUserDTO";
 import { DeleteUserDTO } from "./dto/in/user/DeleteUserDTO";
 import { ChangeIsActiveUserDTO } from "./dto/in/user/ChangeIsActiveUserDTO";
-import { injectable } from "inversify";
+import { inject, injectable } from "inversify";
+import { DataSource } from "typeorm";
 
 @injectable()
 export class UsersRepository implements IUsersRepository {
 
-    #_repository = AppDataSource.getRepository(DbUser);
+    constructor(@inject('DataSource') private _dataSource: DataSource) {
+
+    }
+
+    #_repository = this._dataSource.getRepository(DbUser);
 
     public async getUserByIdAsync(id: number): Promise<RepoUser | null> {
 

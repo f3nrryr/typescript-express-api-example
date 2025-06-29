@@ -20,12 +20,14 @@ import { Container } from 'inversify';
 import swaggerUi from "swagger-ui-express";
 import { swagger } from "./src/swaggerOutput";
 import { DataSourceInfoDTO } from "./src/db/DataSourceInitDTO";
+import { DbHealthCheck } from "./src/healthz/dbHealthCheck";
+import { HealthService } from "./src/healthz/health-service";
+import { ResourceHealth } from "./src/healthz/health-indicator";
+import { DataSource } from "typeorm";
 
 
 
 config({ path: "./.env" });
-const diContainer = new Container();
-
 const envVars = {
     port: process.env.PORT || 5000,
     nodeEnv: process.env.NODE_ENV as "development" | "production",
@@ -47,12 +49,16 @@ export default function getEnv(varName: keyof typeof envVars): string {
     }
 }
 
+//DI-container:
+const diContainer = new Container();
+
 const appDataSource = InitDataSource
     (new DataSourceInfoDTO
         (getEnv("dbHost"), getEnv("dbHost"), Number(getEnv("dbPort")), getEnv("dbUserName"),
          getEnv("dbPassword"), getEnv("dbName"), Boolean(getEnv("dbSynchronize")), Boolean(getEnv("dbLogging")))
     ); // Нужно иметь ранее созданную бд физически.
 
+diContainer.bind<DataSource>('DataSource').toConstantValue(appDataSource);
 diContainer.bind<IUsersRepository>('IUsersRepository').to(UsersRepository);
 diContainer.bind<ITasksRepository>('ITasksRepository').to(TasksRepository);
 diContainer.bind<IUsersService>('IUsersService').to(UsersService);
@@ -64,9 +70,24 @@ const app = express();
 
 app.use(bodyParser.json());
 
+//HEALTHCHECK:
+app.use('/healthz', async (req, res) => {
+    const healthService = new HealthService(
+        [
+            new DbHealthCheck(diContainer.get('DataSource'))
+        ]
+    );
+
+    const healthResults = await healthService.getHealth();
+
+    res.status(healthResults.status === ResourceHealth.Healthy ? 200 : 500)
+        .json(healthResults); // Use .json() instead of .send()
+});
+
 app.use('/api/users', registerUsersRoutes(usersController));
 //app.use('/api/tasks',);
 
+//SWAGGER:
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swagger));
 
 const PORT = Number(getEnv("port"));
