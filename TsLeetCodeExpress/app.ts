@@ -26,6 +26,8 @@ import { ResourceHealth } from "./src/healthz/health-indicator";
 import { DataSource } from "typeorm";
 import { ConsoleLogger, ILogger } from "./src/logger/loggers";
 
+import cors, { CorsOptions } from "cors";
+
 
 
 config({ path: "./.env" });
@@ -50,6 +52,10 @@ export default function getEnv(varName: keyof typeof envVars): string {
     }
 }
 
+const corsOptions: CorsOptions = {
+    origin: `http://localhost:${getEnv("port")}`
+};
+
 //DI-container:
 const diContainer = new Container();
 
@@ -72,6 +78,8 @@ const app = express();
 
 app.use(bodyParser.json());
 
+app.use(cors(corsOptions));
+
 //HEALTHCHECK:
 app.use('/healthz', async (req, res) => {
     const healthService = new HealthService(
@@ -86,7 +94,11 @@ app.use('/healthz', async (req, res) => {
         .json(healthResults); // Use .json() instead of .send()
 });
 
-app.use('/api/users', registerUsersRoutes(usersController));
+const userRouter = registerUsersRoutes(usersController);
+
+console.log(userRouter);
+
+app.use('/api/users', userRouter);
 //app.use('/api/tasks',);
 
 //SWAGGER:
