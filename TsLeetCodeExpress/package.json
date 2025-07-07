@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc --build",
-    "clean": "tsc --build --clean"
+    "clean": "tsc --build --clean",
+    "test": "jest"
   },
   "keywords": [],
   "author": "",
@@ -19,7 +19,8 @@
     "inversify": "7.0.0",
     "express-decorators": "1.0.0",
     "helmet": "8.1.0",
-    "morgan": "1.10.0"
+    "morgan": "1.10.0",
+    "jest": "30.0.4"
   },
   "dependencies": {
     "express": "^5.1.0",

@@ -15,11 +15,14 @@
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
+    "@types/jest": "^30.0.0",
     "@types/morgan": "^1.9.10",
     "@types/node": "^24.0.7",
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.8",
+    "jest": "^30.0.4",
     "swagger-typescript-api": "^13.2.7",
+    "ts-jest": "^29.4.0",
     "typescript": "^5.8.3"
   }
 }
