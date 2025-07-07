@@ -6,7 +6,8 @@ const User_2 = require("../../repositories/dto/out/User");
 const TaskMapper_1 = require("./TaskMapper");
 class UserMapper {
     static toBLL(user) {
-        const userSolvedTasks = user.solvedTasks.map(TaskMapper_1.TaskMapper.toBLL);
+        var _a;
+        const userSolvedTasks = (_a = user.solvedTasks) === null || _a === void 0 ? void 0 : _a.map(TaskMapper_1.TaskMapper.toBLL);
         return new User_1.User(user.id, user.login, user.email, user.isActive, user.createdAt, userSolvedTasks);
     }
     static toRepo(user) {

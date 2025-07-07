@@ -6,7 +6,7 @@ export class UserMapper {
 
     public static toBLL(user: RepoUser): ServiceUser {
 
-        const userSolvedTasks = user.solvedTasks.map(TaskMapper.toBLL);
+        const userSolvedTasks = user.solvedTasks?.map(TaskMapper.toBLL);
 
         return new ServiceUser(user.id, user.login, user.email, user.isActive, user.createdAt, userSolvedTasks);
     }

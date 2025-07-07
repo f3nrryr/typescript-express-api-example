@@ -3,7 +3,7 @@ import { UsersController } from '../controllers/UsersController';
 import { register, getRoutes } from "express-decorators";
 
 class UsersRoutes {
-    router: Router = Router();
+    router = Router();
 
     constructor(private _usersController: UsersController) {
         this._initRoutes();
@@ -11,12 +11,18 @@ class UsersRoutes {
 
     private _initRoutes() {
         // Register decorated routes from the controller
-        const routes = getRoutes(this._usersController);
-        routes.forEach((r) => {
-            console.log(`${r.method} ${r.path}`);
-        })
-        console.log(`routes: ${routes.length}`);
-        register(this.router, routes);
+        //const routes = getRoutes(this._usersController);
+        //routes.forEach((r) => {
+        //    console.log(`${r.method} ${r.path}`);
+        //})
+        //console.log(`routes: ${routes.length}`);
+
+        try {
+            register(this.router, this._usersController);
+        }
+        catch (e) {
+            console.error(e);
+        }
     }
 }
 

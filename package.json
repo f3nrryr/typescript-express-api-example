@@ -4,6 +4,7 @@
     "@wessberg/di": "^3.0.2",
     "@wessberg/di-compiler": "^4.0.2",
     "body-parser": "^2.2.0",
+    "express-decorators": "^1.2.1",
     "inversify": "^7.0.0-alpha.5",
     "pg": "^8.16.3",
     "reflect-metadata": "^0.2.2",

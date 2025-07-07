@@ -118,7 +118,7 @@ export const swagger = {
             }
         },
         "/users/delete": {
-            delete: {
+            post: {
                 tags: ["Users"],
                 summary: "Удалить пользователя",
                 parameters: [{

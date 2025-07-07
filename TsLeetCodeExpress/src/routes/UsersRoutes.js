@@ -11,12 +11,17 @@ class UsersRoutes {
     }
     _initRoutes() {
         // Register decorated routes from the controller
-        const routes = (0, express_decorators_1.getRoutes)(this._usersController);
-        routes.forEach((r) => {
-            console.log(`${r.method} ${r.path}`);
-        });
-        console.log(`routes: ${routes.length}`);
-        (0, express_decorators_1.register)(this.router, routes);
+        //const routes = getRoutes(this._usersController);
+        //routes.forEach((r) => {
+        //    console.log(`${r.method} ${r.path}`);
+        //})
+        //console.log(`routes: ${routes.length}`);
+        try {
+            (0, express_decorators_1.register)(this.router, this._usersController);
+        }
+        catch (e) {
+            console.error(e);
+        }
     }
 }
 // ��������� ������� ��� �������� �������:

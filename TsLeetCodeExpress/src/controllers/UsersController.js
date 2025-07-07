@@ -26,7 +26,7 @@ const DeleteUserRequest_1 = require("../services/dto/request/user/DeleteUserRequ
 const ChangeIsActiveUserRequest_1 = require("../services/dto/request/user/ChangeIsActiveUserRequest");
 const express_decorators_1 = require("express-decorators");
 const logDecorator_1 = require("../logger/logDecorator");
-class UsersController {
+let UsersController = class UsersController {
     constructor(_usersService, _logger) {
         this._usersService = _usersService;
         this._logger = _logger;
@@ -84,23 +84,23 @@ class UsersController {
             res.json(apiReq.id);
         });
     }
-}
+};
 exports.UsersController = UsersController;
 __decorate([
-    (0, express_decorators_1.get)(`/id/:id`),
+    (0, express_decorators_1.get)('/id/:id'),
     (0, logDecorator_1.LogRequestResponse)(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, Object, Function]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "getUserById", null);
 __decorate([
-    (0, express_decorators_1.get)(`/login/:login`),
+    (0, express_decorators_1.get)('/login/:login'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, Object, Function]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "getUserByLogin", null);
 __decorate([
-    (0, express_decorators_1.get)(`/email/:email`),
+    (0, express_decorators_1.get)('/email/:email'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, Object, Function]),
     __metadata("design:returntype", Promise)
@@ -112,24 +112,26 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "createUser", null);
 __decorate([
-    (0, express_decorators_1.put)(),
+    (0, express_decorators_1.put)(''),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, Object, Function]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "updateUser", null);
 __decorate([
-    (0, express_decorators_1.del)(),
+    (0, express_decorators_1.post)('/delete') // ADR: � ���� @del, @route('del', '/') ������ ������ ���������� undefined
+    ,
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, Object, Function]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "deleteUser", null);
 __decorate([
-    (0, express_decorators_1.patch)(),
+    (0, express_decorators_1.patch)(''),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, Object, Function]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "changeIsActiveUser", null);
-function inject(arg0) {
-    throw new Error('Function not implemented.');
-}
+exports.UsersController = UsersController = __decorate([
+    (0, express_decorators_1.basePath)('/users'),
+    __metadata("design:paramtypes", [Object, Object])
+], UsersController);
 //# sourceMappingURL=UsersController.js.map

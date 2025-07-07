@@ -6,7 +6,7 @@ export class UserMapper {
 
     public static toRepoLayer(user: DbUser) : RepoUser {
 
-        const userSolvedTasks = user.solvedTasks.map(TaskMapper.toRepoLayer);
+        const userSolvedTasks = user.solvedTasks?.map(TaskMapper.toRepoLayer);
 
         return new RepoUser(user.id, user.login, user.email, user.passwordHash, user.isActive, user.createdAt, userSolvedTasks);
     }

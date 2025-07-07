@@ -11,16 +11,17 @@ import { DeleteUserRequest as BllDeleteRequest } from "../services/dto/request/u
 import { ChangeIsActiveUserRequest as ApiChangeIsActiveUserRequest } from './contractsDTOs/req/user/ChangeIsActiveUserRequest';
 import { ChangeIsActiveUserRequest as BllChangeIsActiveUserRequest } from "../services/dto/request/user/ChangeIsActiveUserRequest";
 
-import { get, post, patch, put, del } from "express-decorators";
+import { basePath, get, post, patch, put, route } from "express-decorators";
 import { ILogger } from '../logger/loggers';
 import { LogRequestResponse } from '../logger/logDecorator';
 
+@basePath('/users')
 export class UsersController {
 
     constructor(private readonly _usersService: IUsersService,
                 private readonly _logger : ILogger) { }
 
-    @get(`/id/:id`)
+    @get('/id/:id')
     @LogRequestResponse()
     async getUserById(req: Request, res: Response, next: NextFunction) {
 
@@ -31,7 +32,7 @@ export class UsersController {
         res.json(apiContractUser);
     }
 
-    @get(`/login/:login`)
+    @get('/login/:login')
     async getUserByLogin(req: Request, res: Response, next: NextFunction) {
 
         const bllUser = await this._usersService.getUserByLoginAsync(req.params.login);
@@ -41,7 +42,7 @@ export class UsersController {
         res.json(apiContractUser);
     }
 
-    @get(`/email/:email`)
+    @get('/email/:email')
     async getUserByEmail(req: Request, res: Response, next: NextFunction) {
 
         const bllUser = await this._usersService.getUserByEmailAsync(req.params.email);
@@ -63,7 +64,7 @@ export class UsersController {
         res.json(createdUserId);
     }
 
-    @put()
+    @put('')
     async updateUser(req: Request<{}, {}, ApiUpdateRequest>, res: Response, next: NextFunction) {
 
         const updateUserApiReq: ApiUpdateRequest = req.body;
@@ -75,7 +76,7 @@ export class UsersController {
         res.json(UserMapper.toApi(updatedUserBll));
     }
 
-    @del()
+    @post('/delete') // ADR: в либе @del, @route('del', '/') просто кидает исключение undefined
     async deleteUser(req: Request, res: Response, next: NextFunction) {
 
         const apiDeleteReq: ApiDeleteRequest = req.body;
@@ -87,7 +88,7 @@ export class UsersController {
         res.json(apiDeleteReq.id);
     }
 
-    @patch()
+    @patch('')
     async changeIsActiveUser(req: Request, res: Response, next: NextFunction) {
 
         const apiReq: ApiChangeIsActiveUserRequest = req.body;
@@ -98,8 +99,4 @@ export class UsersController {
 
         res.json(apiReq.id);
     }
-}
-
-function inject(arg0: string): (target: typeof UsersController, propertyKey: undefined, parameterIndex: 0) => void {
-    throw new Error('Function not implemented.');
 }

@@ -35,6 +35,7 @@ const loggers_1 = require("./src/logger/loggers");
 const helmet_1 = __importDefault(require("helmet"));
 const cors_1 = __importDefault(require("cors"));
 const morgan_1 = __importDefault(require("morgan"));
+const errorHandler_1 = require("./src/middlewares/errorHandler");
 (0, dotenv_1.config)({ path: "./.env" });
 const envVars = {
     port: process.env.PORT || 5000,
@@ -76,22 +77,6 @@ app.use((0, helmet_1.default)()); // Security headers
 app.use((0, cors_1.default)(corsOptions));
 app.use((0, morgan_1.default)("combined")); // Logging
 app.use(express_1.default.urlencoded({ extended: true })); // Parse URL-encoded bodies
-//// 404 handler
-//app.use("*", (req, res) => {
-//    res.status(404).json({ error: "Route not found" });
-//});
-//// Error handling middleware
-//app.use(
-//    (
-//        err: Error,
-//        req: express.Request,
-//        res: express.Response,
-//        next: express.NextFunction
-//    ) => {
-//        console.error(err.stack);
-//        res.status(500).json({ error: "Something went wrong!" });
-//    }
-//);
 //HEALTHCHECK:
 app.use('/healthz', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const healthService = new health_service_1.HealthService([
@@ -102,11 +87,17 @@ app.use('/healthz', (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         .json(healthResults); // Use .json() instead of .send()
 }));
 const userRouter = (0, UsersRoutes_1.registerUsersRoutes)(usersController);
-console.log(userRouter);
-app.use('/api/users', userRouter);
+//// To view routes on the userRouter:
+//userRouter.stack.forEach((middleware: any) => {
+//    if (middleware.route) {
+//        console.log(`Path: ${middleware.route.path}, Method: ${Object.keys(middleware.route.methods).join(', ').toUpperCase()}`);
+//    }
+//});
+app.use('/api', userRouter);
 //app.use('/api/tasks',);
 //SWAGGER:
 app.use("/api-docs", swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swaggerOutput_1.swagger));
 const PORT = Number(getEnv("port"));
+app.use(errorHandler_1.errorHandler);
 app.listen(PORT, () => console.log(`Application started on ${PORT}`));
 //# sourceMappingURL=app.js.map

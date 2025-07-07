@@ -7,7 +7,7 @@ import { IUsersService } from "./src/services/interfaces/IUsersService";
 import { UsersService } from "./src/services/UsersService";
 import { ITasksService } from "./src/services/interfaces/ITasksService";
 import { TasksService } from "./src/services/TasksService";
-import express, { Express } from 'express';
+import express, { ErrorRequestHandler, Express } from 'express';
 import { registerUsersRoutes } from "./src/routes/UsersRoutes";
 import { UsersController } from "./src/controllers/UsersController";
 import bodyParser from "body-parser";
@@ -30,6 +30,8 @@ import helmet from "helmet";
 import cors, { CorsOptions } from "cors";
 
 import morgan from "morgan";
+
+import { errorHandler } from "./src/middlewares/errorHandler";
 
 
 
@@ -86,24 +88,6 @@ app.use(cors(corsOptions));
 app.use(morgan("combined")); // Logging
 app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
 
-//// 404 handler
-//app.use("*", (req, res) => {
-//    res.status(404).json({ error: "Route not found" });
-//});
-
-//// Error handling middleware
-//app.use(
-//    (
-//        err: Error,
-//        req: express.Request,
-//        res: express.Response,
-//        next: express.NextFunction
-//    ) => {
-//        console.error(err.stack);
-//        res.status(500).json({ error: "Something went wrong!" });
-//    }
-//);
-
 //HEALTHCHECK:
 app.use('/healthz', async (req, res) => {
     const healthService = new HealthService(
@@ -120,14 +104,21 @@ app.use('/healthz', async (req, res) => {
 
 const userRouter = registerUsersRoutes(usersController);
 
-console.log(userRouter);
+//// To view routes on the userRouter:
+//userRouter.stack.forEach((middleware: any) => {
+//    if (middleware.route) {
+//        console.log(`Path: ${middleware.route.path}, Method: ${Object.keys(middleware.route.methods).join(', ').toUpperCase()}`);
+//    }
+//});
 
-app.use('/api/users', userRouter);
+app.use('/api', userRouter);
 //app.use('/api/tasks',);
 
 //SWAGGER:
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swagger));
 
 const PORT = Number(getEnv("port"));
+
+app.use(errorHandler);
 
 app.listen(PORT, () => console.log(`Application started on ${PORT}`));
