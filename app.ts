@@ -1,4 +1,4 @@
-import "reflect-metadata"; // ƒл€ typeOrm. »мпортить в доке предлагают √ЋќЅјЋ№Ќќ.
+import "reflect-metadata"; // 4 typeOrm. globally.
 import { IUsersRepository } from "./src/repositories/interfaces/IUsersRepository";
 import { UsersRepository } from "./src/repositories/UsersRepository";
 import { ITasksRepository } from "./src/repositories/interfaces/ITasksRepository";
@@ -12,13 +12,11 @@ import { registerUsersRoutes } from "./src/routes/UsersRoutes";
 import { UsersController } from "./src/controllers/UsersController";
 import bodyParser from "body-parser";
 
-import { config } from "dotenv";
-import { AppDataSource, InitDataSource } from "./src/db/index";
+import { InitDataSource } from "./src/db/index";
 
 import { Container } from 'inversify';
 
 import swaggerUi from "swagger-ui-express";
-import { swagger } from "./src/swaggerOutput";
 import { DataSourceInfoDTO } from "./src/db/DataSourceInitDTO";
 import { DbHealthCheck } from "./src/healthz/dbHealthCheck";
 import { HealthService } from "./src/healthz/health-service";
@@ -32,33 +30,11 @@ import cors, { CorsOptions } from "cors";
 import morgan from "morgan";
 
 import { errorHandler } from "./src/middlewares/errorHandler";
-
-
-
-config({ path: "./.env" });
-const envVars = {
-    port: process.env.PORT || 5000,
-    nodeEnv: process.env.NODE_ENV as "development" | "production",
-    dbType: process.env.DB_TYPE,
-    dbHost: process.env.DB_HOST,
-    dbPort: process.env.DB_PORT,
-    dbUserName: process.env.DB_USERNAME,
-    dbPassword: process.env.DB_PASSWORD, // todo: по-хорошему, надо шифровать, но дл€ пет-проекта too much.
-    dbName: process.env.DB_NAME,
-    dbSynchronize: process.env.DB_SYNCHRONIZE,
-    dbLogging: process.env.DB_LOGGING
-};
-export default function getEnv(varName: keyof typeof envVars): string {
-    if (typeof envVars[varName] === "undefined") {
-        console.error(`'${varName}' is not available`);
-        process.exit(1);
-    } else {
-        return envVars[varName] as string;
-    }
-}
+import { EnvVarsHelper } from "./src/helpers/envVarsHelper";
+import { swagger } from "./src/swaggerOutput";
 
 const corsOptions: CorsOptions = {
-    origin: `http://localhost:${getEnv("port")}`
+    origin: `${EnvVarsHelper.getEnv("ssl")}://${EnvVarsHelper.getEnv("host")}:${EnvVarsHelper.getEnv("port")}`
 };
 
 //DI-container:
@@ -66,9 +42,9 @@ const diContainer = new Container();
 
 const appDataSource = InitDataSource
     (new DataSourceInfoDTO
-        (getEnv("dbHost"), getEnv("dbHost"), Number(getEnv("dbPort")), getEnv("dbUserName"),
-         getEnv("dbPassword"), getEnv("dbName"), Boolean(getEnv("dbSynchronize")), Boolean(getEnv("dbLogging")))
-    ); // Ќужно иметь ранее созданную бд физически.
+        (EnvVarsHelper.getEnv("dbHost"), EnvVarsHelper.getEnv("dbHost"), Number(EnvVarsHelper.getEnv("dbPort")), EnvVarsHelper.getEnv("dbUserName"),
+            EnvVarsHelper.getEnv("dbPassword"), EnvVarsHelper.getEnv("dbName"), Boolean(EnvVarsHelper.getEnv("dbSynchronize")), Boolean(EnvVarsHelper.getEnv("dbLogging")))
+    );
 
 diContainer.bind<DataSource>('DataSource').toConstantValue(appDataSource);
 diContainer.bind<IUsersRepository>('IUsersRepository').to(UsersRepository);
@@ -81,10 +57,11 @@ const usersController = new UsersController(diContainer.get('IUsersService'), di
 
 const app = express();
 
+app.use(cors(corsOptions));
+
 app.use(bodyParser.json());
 
 app.use(helmet()); // Security headers
-app.use(cors(corsOptions));
 app.use(morgan("combined")); // Logging
 app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
 
@@ -114,10 +91,16 @@ const userRouter = registerUsersRoutes(usersController);
 app.use('/api', userRouter);
 //app.use('/api/tasks',);
 
-//SWAGGER:
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swagger));
+app.use(
+    '/api-docs',
+    swaggerUi.serve,
+    swaggerUi.setup(swagger(EnvVarsHelper.getEnv('host'), Number(EnvVarsHelper.getEnv('port'))), {
+        explorer: true,
+        customSiteTitle: 'My API Docs'
+    })
+);
 
-const PORT = Number(getEnv("port"));
+const PORT = Number(EnvVarsHelper.getEnv("port"));
 
 app.use(errorHandler);
 

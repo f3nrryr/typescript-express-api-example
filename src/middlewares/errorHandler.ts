@@ -13,10 +13,12 @@ export const errorHandler = (err: any,
             statusCode: err.statusCode,
             stackTrace: err.stackTrace
         });
+
+        return;
     }
 
     response.status(500).json({
-        title: 'Ошибка сервера',
+        title: 'Server error',
         description: err.message,
         statusCode: 500,
         stackTrace: err.stack

@@ -1,15 +1,15 @@
 export interface ILogger {
-    log(message: string, context?: Record<string, unknown>): void;
-    error(message: string, error?: Error, context?: Record<string, unknown>): void;
+    log(methodName: string, path: string, body: string, result: any, durationMs: number): void;
+    error(methodName: string, path: string, body: string, durationMs: number, error?: Error): void;
 }
 
 export class ConsoleLogger implements ILogger {
-    log(message: string, context?: Record<string, unknown>) {
-        console.log(`[LOG] ${message}`, context || '');
+    log(methodName: string, path: string, body: string, result: any, durationMs: number) {
+        console.log(`\n[LOG] ${new Date()} ${methodName}. path: ${path}, body: ${body}. RESULT: ${result}. Duration: ${durationMs}ms\n`);
     }
 
-    error(message: string, error?: Error, context?: Record<string, unknown>) {
-        console.error(`[ERROR] ${message}`, error, context || '');
+    error(methodName: string, path: string, body: string, durationMs: number, error: Error) {
+        console.error(`\n[ERROR] ${new Date()} ${methodName}. path: ${path}, body: ${body}. Exception: ${JSON.stringify(error)}. Duration: ${durationMs}ms\n`);
     }
 }
 
@@ -23,13 +23,13 @@ export class FileLogger implements ILogger {
         this.logFilePath = logFilePath;
     }
 
-    log(message: string, context?: Record<string, unknown>) {
-        const logEntry = `[${new Date().toISOString()}] LOG: ${message} ${JSON.stringify(context || {})}\n`;
+    log(methodName: string, path: string, body: string, result: any, durationMs: number) {
+        const logEntry = `\n[LOG] ${new Date().toISOString()} ${methodName}. path: ${path}, body: ${body}. RESULT: ${JSON.stringify(result)}. Duration: ${durationMs}ms\n`;
         writeFileSync(this.logFilePath, logEntry, { flag: 'a' });
     }
 
-    error(message: string, error?: Error, context?: Record<string, unknown>) {
-        const logEntry = `[${new Date().toISOString()}] ERROR: ${message} ${error?.stack || ''} ${JSON.stringify(context || {})}\n`;
+    error(methodName: string, path: string, body: string, durationMs: number, error: Error) {
+        const logEntry = `\n[ERROR] ${new Date().toISOString()} ${methodName} . path: ${path}, body: ${body}. Exception: ${JSON.stringify(error)}. Duration: ${durationMs}ms\nStack: ${error?.stack || 'no stack trace'}\n`;
         writeFileSync(this.logFilePath, logEntry, { flag: 'a' });
     }
 }

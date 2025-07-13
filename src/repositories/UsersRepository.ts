@@ -79,7 +79,7 @@ export class UsersRepository implements IUsersRepository {
 
         this.#_repository.save(newUser);
 
-        return newUser.id; // todo: проверить, выводит ли id.
+        return newUser.id; // todo: пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ id.
     }
 
     public async updateUserAsync(updateUserDTO: UpdateUserDTO): Promise<RepoUser> {

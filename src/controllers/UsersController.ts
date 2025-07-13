@@ -22,7 +22,7 @@ export class UsersController {
                 private readonly _logger : ILogger) { }
 
     @get('/id/:id')
-    @LogRequestResponse()
+    @LogRequestResponse
     async getUserById(req: Request, res: Response, next: NextFunction) {
 
         const bllUser = await this._usersService.getUserByIdAsync(Number(req.params.id));
@@ -76,7 +76,7 @@ export class UsersController {
         res.json(UserMapper.toApi(updatedUserBll));
     }
 
-    @post('/delete') // ADR: в либе @del, @route('del', '/') просто кидает исключение undefined
+    @post('/delete') // ADR: пїЅ пїЅпїЅпїЅпїЅ @del, @route('del', '/') пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ undefined
     async deleteUser(req: Request, res: Response, next: NextFunction) {
 
         const apiDeleteReq: ApiDeleteRequest = req.body;

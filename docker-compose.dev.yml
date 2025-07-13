@@ -2,14 +2,16 @@ version: '3.8'
 
 services:
   app:
+    container_name: debugTsExpressApi
+    env_file:
+      - .env
     build: .
     ports:
       - "${PORT}:${PORT}"
-      - "9229:9229"  # Для дебаггера
     environment:
       - NODE_ENV=${NODE_ENV}
-      - DB_HOST=${DB_HOST}
-      - DB_PORT=${DB_PORT}
+      - DB_HOST=db
+      - DB_PORT=5432
       - DB_USERNAME=${DB_USERNAME}
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_NAME=${DB_NAME}
@@ -21,9 +23,12 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    networks:
+      - app-network
     restart: unless-stopped
 
   db:
+    container_name: debugDbPg
     image: postgres:15-alpine
     environment:
       POSTGRES_USER: ${DB_USERNAME}
@@ -38,7 +43,13 @@ services:
       - postgres_data:/var/lib/postgresql/data
     ports:
       - "${DB_PORT}:5432"
+    networks:
+      - app-network
     restart: unless-stopped
+
+networks:
+  app-network:
+    driver: bridge
 
 volumes:
   postgres_data:

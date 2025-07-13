@@ -2,6 +2,9 @@ version: '3.8'
 
 services:
   app:
+    container_name: tsExpressApi
+    env_file:
+      - .env
     build:
       context: .
       dockerfile: Dockerfile.prod
@@ -9,8 +12,8 @@ services:
       - "${PORT}:${PORT}"
     environment:
       - NODE_ENV=${NODE_ENV}
-      - DB_HOST=${DB_HOST}
-      - DB_PORT=${DB_PORT}
+      - DB_HOST=db
+      - DB_PORT=5432
       - DB_USERNAME=${DB_USERNAME}
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_NAME=${DB_NAME}
@@ -19,22 +22,34 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    networks:
+      - app-network
     restart: unless-stopped
 
   db:
+    container_name: dbPg
     image: postgres:15-alpine
     environment:
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "5433:5432"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d ${DB_NAME}"]
       interval: 5s
       timeout: 5s
       retries: 10
+      start_period: 10s  # Дать PostgreSQL время на запуск
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
     restart: unless-stopped
+
+networks:
+  app-network:
+    driver: bridge
 
 volumes:
   postgres_data:
